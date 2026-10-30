@@ -1,13 +1,56 @@
+import Link from "next/link";
 import { ProjectCollection, Reveal } from "../../components/interactions";
-import { ContactSection } from "../../components/site";
+import { ContactSection, Arrow } from "../../components/site";
+import { profile } from "../../components/data";
 
-export const metadata = { title: "Projects", description: "Explore SyncSpend, Atmiya IT Portal, and Money Heist Quiz — real projects by Tejas J Solanki." };
+export const metadata = {
+  title: "Projects & Architecture",
+  description:
+    "Explore SyncSpend (offline-first Android app), Atmiya IT Portal (academic analytics), and Money Heist Quiz — engineering projects by Tejas J Solanki.",
+};
 
 export default function Projects() {
   return (
     <>
-      <section className="page-intro container"><p className="eyebrow">The project shelf / 01—03</p><h1>Ideas out of my head.<br /><span className="orange-text">Into the real world.</span></h1><p>Mobile apps, useful web tools, and the occasional experiment. Here’s what I’ve been making.</p></section>
-      <section className="container projects-page"><ProjectCollection /><Reveal><p className="project-note">Project previews are custom interface studies based on each project’s purpose—not screenshots or live financial/student data.</p><a className="button button-outline" href="https://github.com/Tejas3545">More on GitHub <span aria-hidden="true">↗</span></a></Reveal></section>
+      <section className="page-intro container">
+        <p className="eyebrow">Production & Learning Work / 01—03</p>
+        <h1>
+          Engineered to work.<br />
+          <span className="accent-text">Open source on GitHub.</span>
+        </h1>
+        <p>
+          Native Android applications with offline-first synchronization, student academic tools, and responsive web systems. Every project includes public source code.
+        </p>
+      </section>
+
+      <section className="container projects-page">
+        <ProjectCollection />
+
+        <Reveal>
+          <div className="projects-footer-cta">
+            <div className="cta-copy">
+              <h3>Have a specific project or role in mind?</h3>
+              <p>
+                All project source code is available under MIT/open license on GitHub. Feel free to inspect commit history, issues, and architectures.
+              </p>
+            </div>
+            <div className="cta-buttons">
+              <a
+                className="btn btn-ink"
+                href={profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Explore GitHub Repositories <Arrow />
+              </a>
+              <Link className="btn btn-outline" href="/contact">
+                Discuss an Opportunity <Arrow />
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       <ContactSection />
     </>
   );

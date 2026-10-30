@@ -1,111 +1,132 @@
-# Tejas J Solanki — Developer’s Studio
+# Tejas J Solanki — Personal Developer Portfolio
 
-A personal portfolio built with **Next.js App Router and React**, replacing the earlier plain HTML version.
+A developer portfolio and engineering showcase engineered with **Next.js App Router (v16), React 19, and Modern CSS**.
 
-## Design
+- **Live Deployment**: [https://tejasjsolanki.vercel.app](https://tejasjsolanki.vercel.app)
+- **Source Repository**: [https://github.com/Tejas3545/tejasjsolanki](https://github.com/Tejas3545/tejasjsolanki)
+- **Internship**: WeIntern Pvt Ltd — Week 1 Frontend Engineering Task
 
-An original developer-studio composition: layered project previews, warm neutral surfaces, orange accents, moss, rose, and ochre. Inspired by the interaction vocabulary of [21st.dev](https://21st.dev) (card stacks, hover previews, compact navigation) and the project-focused clarity of [Brittany Chiang’s portfolio](https://brittanychiang.com). No components, source code, or artwork were copied from those sites.
+---
 
-- Selectable hero project stack.
-- Custom CSS interface studies for three real public projects.
-- Responsive project cards with category filters.
-- Pointer-based card tilt and scroll-entry animation.
-- Native browser animation APIs and CSS transforms; no animation or WebGL dependency.
-- Motion toggle and operating-system reduced-motion support.
-- Keyboard-accessible mobile navigation with Escape dismissal.
-- Contact form validation and email-draft creation.
-- Clipboard feedback, including a manual fallback if access is denied.
-- Four pre-rendered routes, metadata, and security headers.
-- No analytics, trackers, backend data collection, stock testimonials, or invented career claims.
+## Design System & Inspiration
 
-### Fonts
+The design combines the tactile, editorial feel of a **lightweight notebook page** with the high-contrast precision of **studio dark mode**. 
+Inspired by the interaction patterns of [21st.dev](https://21st.dev), the clean portfolio architecture of [Purv Kabaria](https://purvkabaria.netlify.app/), and developer portfolio structures:
 
-The system font stack uses San Francisco on Apple devices when available. Helvetica Neue and Arial are fallbacks. Apple’s proprietary SF Pro files are not redistributed.
+- **Typography**: Apple SF Pro system font stack (`-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui`).
+- **Dual Theme Support**:
+  - **Notebook Page (Light Mode)**: Warm linen/paper tones (`#f7f6f2`), graphite text, terracotta orange accents (`#bd441e`), botanical sage (`#4e6a43`), and warm ochre.
+  - **Studio Obsidian (Dark Mode)**: Deep carbon obsidian (`#0e1110`), crisp contrast, and subtle borders inspired by modern developer tooling.
+- **Zero AI Slop**: No generic blue-purple gradient washes, no robotic AI emojis, no boilerplate copy. Pure hand-crafted CSS Grid, Flexbox, and native browser animations.
+- **Micro-Interactions & Smoothness**:
+  - Interactive 3D tilt hero workbench with preview switcher.
+  - Smooth tab switching across tech stack categories and project filters.
+  - Pulsing status availability indicator ("Available for internships & developer roles").
+  - Accessible reduced-motion toggle with persistent storage and system preference detection.
 
-### Contact behaviour
+---
 
-The contact form **does not send messages**. It prepares an encoded `mailto:` draft that the visitor opens, reviews, and sends using their email application. Direct email and social links are always available.
+## Key Features
 
-### Project artwork
+1. **Direct Instant Messaging & Communications Hub**:
+   - Replaced clunky email-copy buttons with direct, frictionless communication paths.
+   - **Direct WhatsApp Chat**: One-click instant WhatsApp chat with pre-formatted message generation for immediate mobile-to-mobile replies.
+   - **Direct Email Dispatch**: Real-time form submission directly to `tejassolanki5881@gmail.com` with spam trap protection and instant feedback.
+   - **Verified Channels**: Direct access to LinkedIn profile and GitHub repositories.
+2. **Experience & Journey Timeline**:
+   - Web Development Intern @ **WeIntern Pvt Ltd** (Semantic web architectures, CSS layout systems, responsive UI components).
+   - B.Tech in Information Technology @ **Atmiya University** (Rajkot, Gujarat — core CS, Android SDK, and database systems).
+3. **Engineering Project Showcases**:
+   - **SyncSpend**: Native Android personal finance app built with Kotlin, Jetpack Compose, Room SQLite, and WorkManager (100% offline-first).
+   - **Atmiya IT Portal**: Student attendance and academic analytics dashboard built with Python, Flask, JavaScript, and Excel data ingestion.
+   - **Money Heist Quiz**: Interactive game experiment built with TypeScript and deployed on Vercel.
+4. **Responsive Across All Viewports**:
+   - Zero horizontal overflow across 320px, 390px, 768px, 1080px, and 1440px screens.
+   - Mobile navigation drawer with keyboard Escape dismissal.
+   - Touch-friendly inputs and buttons.
 
-The previews are illustrative interface studies, not screenshots. Financial and attendance values are clearly marked as demo data. They are not statements about the author’s finances or academic records.
+---
 
-## Run
-
-Requires Node.js 20.9 or later.
+## File Structure
 
 ```text
-npm ci
+tejasjsolanki/
+├── app/
+│   ├── layout.js          # Root layout with ThemeProvider, MotionProvider, SEO metadata
+│   ├── page.js            # Home: Hero studio, stats, experience timeline, work, toolkit, contact
+│   ├── globals.css        # Comprehensive CSS: Light notebook & dark studio themes, SF Pro font
+│   ├── about/
+│   │   └── page.js        # Developer story, Atmiya University journey, core engineering principles
+│   ├── projects/
+│   │   └── page.js        # Filterable project showcase, architecture breakdowns, live links
+│   ├── contact/
+│   │   └── page.js        # Direct WhatsApp and Email messaging hub, FAQs
+│   └── not-found.js       # 404 error page
+├── components/
+│   ├── data.js            # Developer bio, stats, experience, tech stack categories, projects data
+│   ├── interactions.js    # ThemeToggle, MotionToggle, HeroStudio, ProjectCollection, DirectContactHub
+│   ├── previews.js        # Custom CSS UI mockups (SyncSpend, Atmiya Portal, Money Heist Quiz)
+│   └── site.js            # Header, Footer, Section labels, and container helpers
+├── screenshots/           # Acceptance test output screenshots
+│   ├── home-desktop.png   # Full desktop home view (1440px)
+│   ├── home-mobile.png    # Mobile view (390px)
+│   ├── projects.png       # Projects section view (1440px)
+│   └── contact.png        # Direct messaging and contact view (1440px)
+├── tests/
+│   └── browser.py         # Automated Playwright acceptance test suite and screenshot generator
+├── next.config.mjs
+└── package.json
+```
+
+---
+
+## Local Setup & Development
+
+Prerequisites: Node.js 20.9+ (Turbopack supported).
+
+```bash
+# Navigate to the project directory
+cd tejasjsolanki
+
+# Install dependencies
+npm install
+
+# Start local development server
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-Production:
+### Production Build
 
-```text
+```bash
 npm run build
 npm start
 ```
 
-## Structure
+### Running Automated Acceptance Tests
 
-```text
-app/
-  layout.js
-  page.js
-  globals.css
-  about/page.js
-  projects/page.js
-  contact/page.js
-  not-found.js
-components/
-  data.js
-  interactions.js
-  previews.js
-  site.js
-tests/
-  browser.py
-screenshots/
-next.config.mjs
-package.json
-```
-
-## Verification
-
-With Python Playwright and Chromium installed, start the production server and run:
-
-```text
+```bash
 python tests/browser.py
 ```
 
-Set `PORTFOLIO_BASE_URL` to test a live deployment instead of localhost. Browser tests cover page responses, responsive overflow, local routes, mobile navigation, keyboard access, hero previews, project filters, form validation, draft generation, clipboard success/failure feedback, motion preferences, and the no-JavaScript content fallback. The test captures the four required portfolio screenshots.
+Tests verify:
+- HTTP 200 on all routes (`/`, `/about`, `/projects`, `/contact`)
+- Zero horizontal layout overflow across 320px, 390px, 768px, 1440px viewports
+- Interactive preview switcher on the hero workbench
+- Category filtering for projects
+- Direct WhatsApp and Email form action triggers
+- Theme switching and motion pause persistence
+- Automatic high-resolution screenshot generation into `screenshots/`
 
-## Content and author
+---
 
-**Tejas J Solanki** · Rajkot, Gujarat, India  
-Email: tejassolanki5881@gmail.com  
-GitHub: https://github.com/Tejas3545  
-LinkedIn: https://www.linkedin.com/in/tejas-j-solanki2476/
+## Author & Contact Details
 
-Content is based on the author’s public GitHub profile and the SyncSpend, Atmiya IT Portal, and Money Heist Quiz repositories, reviewed on 30 October 2026. LinkedIn was available only through search indexing; unverified employment claims and dates are excluded.
-
-## Assignment scope
-
-This is the **portfolio** assignment, rebuilt in Next.js at the author’s request. The original Week 1 PDF specifies HTML/CSS and approval for external UI libraries; confirm that a React/Next.js submission is accepted by the coordinator. This repository does not claim completion of the separate business landing page or CSS challenge assignments.
-
-## Publication
-
-- Live: **https://tejasjsolanki.vercel.app**
-- Source: **https://github.com/Tejas3545/tejasjsolanki**
-
-Production build and the full browser suite passed locally and on the public Vercel deployment on 30 October 2026. All four routes were checked at 320, 390, 768, and 1440 pixels. Interaction, reduced-motion, clipboard fallback, email-draft, mobile navigation, no-JavaScript content, and 404 checks passed with no browser script errors.
-
-### Screenshots
-
-- [Desktop homepage](screenshots/home-desktop.png)
-- [Mobile homepage](screenshots/home-mobile.png)
-- [Projects](screenshots/projects.png)
-- [Contact](screenshots/contact.png)
-
-Deploy updates from this folder using `vercel --prod`. GitHub pushes alone do not guarantee deployment unless the Git integration is connected in Vercel.
+- **Name**: Tejas J Solanki
+- **Location**: Rajkot, Gujarat, India
+- **University**: Atmiya University (B.Tech Information Technology)
+- **Email**: tejassolanki5881@gmail.com
+- **GitHub**: [https://github.com/Tejas3545](https://github.com/Tejas3545)
+- **LinkedIn**: [https://www.linkedin.com/in/tejas-j-solanki2476/](https://www.linkedin.com/in/tejas-j-solanki2476/)
+- **Live Portfolio**: [https://tejasjsolanki.vercel.app](https://tejasjsolanki.vercel.app)

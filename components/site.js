@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { Reveal, MotionToggle } from "./interactions";
+import {
+  DirectContactHub,
+  Reveal,
+  MotionToggle,
+  TechStackPanel,
+  StatsStrip,
+  ExperienceTimeline,
+} from "./interactions";
 import { profile } from "./data";
 
 export function Arrow() {
@@ -7,22 +14,119 @@ export function Arrow() {
 }
 
 export function SectionLabel({ number, children }) {
-  return <p className="section-label"><span>{number}</span>{children}</p>;
+  return (
+    <p className="section-label">
+      <span>{number}</span>
+      {children}
+    </p>
+  );
 }
 
-export function ContactSection({ children }) {
-  return <section className="contact-section container"><Reveal><div className="contact-banner"><div className="contact-banner-top"><span className="eyebrow">Have something in mind?</span><span className="contact-ring" aria-hidden="true" /></div><h2>Good things start<br />with a <span>conversation.</span></h2><div className="contact-banner-bottom"><Link href="/contact" className="button button-ink">Let’s talk <Arrow /></Link>{children}<p>Projects, collaborations,<br />and the next good question.</p></div></div></Reveal></section>;
+export function ContactSection({ standalone = false }) {
+  return (
+    <section
+      className={`contact-section container ${standalone ? "contact-standalone" : ""}`}
+      id="get-in-touch"
+    >
+      <div className="section-heading">
+        <div>
+          <SectionLabel number="04">Direct Contact & Channels</SectionLabel>
+          <h2>
+            Let’s start a conversation.<br />
+            <span className="muted-text">Directly to my WhatsApp or inbox.</span>
+          </h2>
+        </div>
+        <p>
+          No middlemen or unnecessary friction.<br />
+          Feel free to send a direct message below.
+        </p>
+      </div>
+      <DirectContactHub />
+    </section>
+  );
 }
 
 export function Toolkit() {
-  const groups = [
-    { name: "Web & backend", code: "</>", tone: "peach", tools: ["HTML & CSS", "JavaScript", "Python", "Flask", "Django", "PHP", "Laravel"] },
-    { name: "Mobile", code: "[ ]", tone: "green", tools: ["Kotlin", "Jetpack Compose", "Room", "WorkManager", "Flutter", "Dart"] },
-    { name: "Data & the workbench", code: "{ }", tone: "pink", tools: ["SQLite", "MySQL", "Git", "GitHub", "Figma", "Raspberry Pi"] },
-  ];
-  return <div className="toolkit-grid">{groups.map((group, index) => <Reveal delay={index * 80} key={group.name}><article className={`toolkit-card ${group.tone}`}><span className="toolkit-symbol" aria-hidden="true">{group.code}</span><h3>{group.name}</h3><ul>{group.tools.map((tool) => <li key={tool}>{tool}</li>)}</ul></article></Reveal>)}</div>;
+  return <TechStackPanel />;
+}
+
+export function StatsBanner() {
+  return <StatsStrip />;
+}
+
+export function JourneySection() {
+  return (
+    <div className="journey-wrapper">
+      <ExperienceTimeline />
+    </div>
+  );
 }
 
 export function Footer() {
-  return <footer className="footer container"><div className="footer-top"><Link className="footer-wordmark" href="/">tejas<span>j</span>solanki<span>.</span></Link><p>A curious mind. A practical approach.<br />Built in Rajkot, India.</p></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Tejas J Solanki</span><nav aria-label="Footer navigation"><Link href="/about">About</Link><Link href="/projects">Projects</Link><Link href="/contact">Contact</Link><a href={profile.github}>GitHub <Arrow /></a><a href={profile.linkedin}>LinkedIn <Arrow /></a></nav><MotionToggle /></div></footer>;
+  return (
+    <footer className="footer container">
+      <div className="footer-top">
+        <div className="footer-brand">
+          <Link className="footer-wordmark" href="/">
+            tejas<span className="brand-dot">j</span>solanki<span>.</span>
+          </Link>
+          <p className="footer-subtitle">
+            Full-Stack Developer & Android Builder.<br />
+            Crafting durable software from Rajkot, Gujarat, India.
+          </p>
+        </div>
+
+        <div className="footer-quick-contacts">
+          <a
+            href="https://api.whatsapp.com/send?text=Hi%20Tejas,%20I%20saw%20your%20portfolio!"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-contact-pill"
+          >
+            WhatsApp <Arrow />
+          </a>
+          <a href={`mailto:${profile.email}`} className="footer-contact-pill">
+            Email Me <Arrow />
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-contact-pill"
+          >
+            LinkedIn <Arrow />
+          </a>
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-contact-pill"
+          >
+            GitHub <Arrow />
+          </a>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <div className="footer-legal">
+          <span>© {new Date().getFullYear()} Tejas J Solanki. Built with Next.js App Router.</span>
+          <span className="footer-note">All rights reserved · No AI slop</span>
+        </div>
+
+        <nav aria-label="Footer navigation" className="footer-nav">
+          <Link href="/">Home</Link>
+          <Link href="/projects">Projects</Link>
+          <Link href="/about">About & Journey</Link>
+          <Link href="/contact">Contact</Link>
+          <a href={profile.github} target="_blank" rel="noopener noreferrer">
+            GitHub <Arrow />
+          </a>
+        </nav>
+
+        <div className="footer-controls">
+          <MotionToggle />
+        </div>
+      </div>
+    </footer>
+  );
 }
