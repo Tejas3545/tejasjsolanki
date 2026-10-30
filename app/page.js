@@ -7,15 +7,19 @@ import {
   FileTextIcon,
   LinkedinIcon,
   GithubIcon,
+  TwitterIcon,
+  InstagramIcon,
   ArrowRightIcon,
 } from "../components/icons";
 import {
+  ContributionsGraph,
   ExperienceTabs,
+  LeadershipAchievements,
   TechStackTabs,
   HighlightsGrid,
   ProjectCard,
-  ContributionsGraph,
   DirectContactSection,
+  ThoughtAndVisitorCounter,
 } from "../components/interactions";
 
 export default function HomePage() {
@@ -23,8 +27,9 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ---------------- Hero Section ---------------- */}
+      {/* ---------------- 1. Hero Section ---------------- */}
       <section className="hero-section">
+        {/* Photo, Name, Subtitle */}
         <div className="hero-profile-row">
           <div className="avatar-wrapper">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -40,7 +45,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Quick Meta List */}
+        {/* 2. Location, Email, Studying */}
         <dl className="hero-meta-list">
           <div className="hero-meta-item">
             <dt className="eyebrow">Location</dt>
@@ -64,12 +69,12 @@ export default function HomePage() {
             <dt className="eyebrow">Studying</dt>
             <dd className="hero-meta-val">
               <GraduationCapIcon size={13} className="text-muted" />
-              <span>{profile.degree} @ {profile.university}</span>
+              <span>{profile.degree}</span>
             </dd>
           </div>
         </dl>
 
-        {/* Bio Copy */}
+        {/* 3. About section (Bio & Exploring) */}
         <div className="hero-bio">
           <p>{profile.bio}</p>
           <p>
@@ -83,52 +88,87 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Action Pills */}
-        <div className="hero-cta-row">
+        {/* 4. Resume button + Icon-only social links */}
+        <div className="hero-social-row">
           <a
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="pill-btn"
+            className="resume-btn"
           >
-            <FileTextIcon size={13} />
+            <FileTextIcon size={14} />
             <span>Resume</span>
           </a>
-          <a
-            href={profile.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pill-btn"
-          >
-            <LinkedinIcon size={13} />
-            <span>LinkedIn</span>
-          </a>
-          <a
-            href={profile.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pill-btn"
-          >
-            <GithubIcon size={13} />
-            <span>GitHub</span>
-          </a>
-          <a href={`mailto:${profile.email}`} className="pill-btn">
-            <MailIcon size={13} />
-            <span>Email</span>
-          </a>
+
+          <div className="social-icons-group">
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-btn"
+              title="GitHub"
+              aria-label="GitHub"
+            >
+              <GithubIcon size={16} />
+            </a>
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-btn"
+              title="LinkedIn"
+              aria-label="LinkedIn"
+            >
+              <LinkedinIcon size={16} />
+            </a>
+            <a
+              href={profile.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-btn"
+              title="Twitter / X"
+              aria-label="Twitter / X"
+            >
+              <TwitterIcon size={15} />
+            </a>
+            <a
+              href={profile.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-btn"
+              title="Instagram"
+              aria-label="Instagram"
+            >
+              <InstagramIcon size={15} />
+            </a>
+            <a
+              href={`mailto:${profile.email}`}
+              className="social-icon-btn"
+              title="Email"
+              aria-label="Email"
+            >
+              <MailIcon size={15} />
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* ---------------- Experience & Education ---------------- */}
+      {/* ---------------- 5. GitHub Contributions Heatmap ---------------- */}
+      <ContributionsGraph />
+
+      {/* ---------------- 6. Experience (Work & Education with logos) ---------------- */}
       <ExperienceTabs />
 
-      {/* ---------------- Tech Stack ---------------- */}
+      {/* ---------------- 7. Leadership & Achievements ---------------- */}
+      <LeadershipAchievements />
+
+      {/* ---------------- 8. Tech Stack (Colorful Brand Icons) ---------------- */}
       <TechStackTabs />
 
-      {/* ---------------- Highlights & Achievements ---------------- */}
+      {/* ---------------- 9. Competitive Programming & Highlights ---------------- */}
       <HighlightsGrid />
 
-      {/* ---------------- Featured Projects ---------------- */}
+      {/* ---------------- 10. Featured Projects ---------------- */}
       <section className="scroll-block" id="projects">
         <div className="section-divider">
           <h2 className="eyebrow shrink-0">Featured Projects</h2>
@@ -150,11 +190,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- GitHub Contributions Heatmap ---------------- */}
-      <ContributionsGraph />
-
-      {/* ---------------- Direct Contact & Messaging ---------------- */}
+      {/* ---------------- 11. Get in Touch ---------------- */}
       <DirectContactSection />
+
+      {/* ---------------- 12 & 13. Thought & Live Visitor Counter ---------------- */}
+      <ThoughtAndVisitorCounter />
     </>
   );
 }

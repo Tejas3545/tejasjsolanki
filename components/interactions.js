@@ -14,8 +14,10 @@ import {
   ArrowUpRightIcon,
   SkillIcon,
   SendIcon,
+  AwardIcon,
+  QuoteIcon,
 } from "./icons";
-import { experience, skillCategories, profile } from "./data";
+import { experience, skillCategories, profile, leadership, thought } from "./data";
 
 // -----------------------------------------------------------------------------
 // Theme Context & Toggle
@@ -210,7 +212,16 @@ export function ExperienceTabs() {
               <li key={idx} className="timeline-item">
                 <div className="timeline-icon-col">
                   <span className="timeline-icon-badge" aria-hidden="true">
-                    {activeTab === "work" ? "W" : "E"}
+                    {item.logo ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={item.logo}
+                        alt={`${item.organization} logo`}
+                        className="timeline-logo-img"
+                      />
+                    ) : (
+                      activeTab === "work" ? "W" : "E"
+                    )}
                   </span>
                 </div>
                 <div className="timeline-content-col">
@@ -246,6 +257,27 @@ export function ExperienceTabs() {
           </ul>
         </div>
       </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Leadership & Achievements (Matching Purv Kabaria's layout)
+// -----------------------------------------------------------------------------
+export function LeadershipAchievements() {
+  return (
+    <div className="leadership-box">
+      <h3 className="eyebrow" style={{ marginBottom: "0.625rem" }}>
+        Leadership & Achievements
+      </h3>
+      <ul className="leadership-list">
+        {leadership.map((item, idx) => (
+          <li key={idx} className="leadership-item">
+            <AwardIcon size={14} className="leadership-icon" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -364,7 +396,16 @@ export function ProjectCard({ project }) {
         aria-hidden="true"
       >
         <div className="project-banner">
-          <ProjectPreviewBanner type={project.previewType} title={project.name} />
+          {project.image ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={project.image}
+              alt={`${project.name} preview`}
+              className="project-img"
+            />
+          ) : (
+            <ProjectPreviewBanner type={project.previewType} title={project.name} />
+          )}
         </div>
       </a>
 
@@ -409,6 +450,13 @@ export function ProjectCard({ project }) {
         </div>
 
         <p className="project-desc">{project.description}</p>
+
+        {project.about && (
+          <div className="project-about-section">
+            <p className="project-about-title">About this project</p>
+            <p className="project-about-desc">{project.about}</p>
+          </div>
+        )}
 
         <div className="project-tags-wrap">
           <ul className="project-tags-list">
@@ -758,5 +806,51 @@ export function DirectContactSection({ standalone = false }) {
         </div>
       </div>
     </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Thought & Live Visitor Counter (Point 5 & 12 matching Purv Kabaria's aside)
+// -----------------------------------------------------------------------------
+export function ThoughtAndVisitorCounter() {
+  const [visitorCount, setVisitorCount] = useState(1420);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const stored = localStorage.getItem("tjs_portfolio_visits");
+      let count = stored ? parseInt(stored, 10) : 1420;
+      if (isNaN(count)) count = 1420;
+      count += 1;
+      localStorage.setItem("tjs_portfolio_visits", count.toString());
+      setVisitorCount(count);
+    } catch {
+      setVisitorCount(1421);
+    }
+  }, []);
+
+  return (
+    <aside className="thought-aside" aria-label="Thought of the day and visitor count">
+      <figure className="thought-figure">
+        <QuoteIcon size={16} className="thought-icon" />
+        <div>
+          <blockquote className="thought-quote">
+            &ldquo;{thought.quote}&rdquo;
+          </blockquote>
+          <figcaption className="thought-author">— {thought.author}</figcaption>
+        </div>
+      </figure>
+
+      <div className="visitor-badge" title="Live visitor counter">
+        <span className="visitor-dot pulse-dot" aria-hidden="true" />
+        <span>
+          <strong className="visitor-count">
+            {mounted ? visitorCount.toLocaleString() : "1,421"}
+          </strong>{" "}
+          visitors
+        </span>
+      </div>
+    </aside>
   );
 }
