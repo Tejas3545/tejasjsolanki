@@ -1,0 +1,46 @@
+export const profile = {
+  name: "Tejas J Solanki",
+  email: "tejassolanki5881@gmail.com",
+  github: "https://github.com/Tejas3545",
+  linkedin: "https://www.linkedin.com/in/tejas-j-solanki2476/",
+};
+
+export const projects = [
+  {
+    id: "syncspend",
+    name: "SyncSpend",
+    category: "mobile",
+    discipline: "ANDROID / PERSONAL FINANCE",
+    headline: "A clearer picture.\nEven offline.",
+    description: "A native expense tracker that keeps records on your device and syncs in the background. Built for the days when your connection doesn’t keep up.",
+    tags: ["Kotlin", "Jetpack Compose", "Room", "WorkManager"],
+    source: "https://github.com/Tejas3545/SyncSpend",
+    detail: "Offline-first storage · Notion & Google Sheets sync",
+    number: "01",
+  },
+  {
+    id: "atmiya",
+    name: "Atmiya IT Portal",
+    category: "web",
+    discipline: "WEB / STUDENT TOOLS",
+    headline: "Less searching.\nMore clarity.",
+    description: "Attendance records, weekly breakdowns, and compensation status in one student-facing portal, connected to the department’s Excel records.",
+    tags: ["Python", "Flask", "JavaScript", "Excel"],
+    source: "https://github.com/Tejas3545/atmiya-it-portal",
+    detail: "Department records · Weekly attendance breakdown",
+    number: "02",
+  },
+  {
+    id: "quiz",
+    name: "Money Heist Quiz",
+    category: "web",
+    discipline: "WEB / INTERACTIVE EXPERIMENT",
+    headline: "Know the story?\nProve it.",
+    description: "A themed quiz experiment built with TypeScript. A different kind of project: a little play, a bit of suspense, and another reason to build.",
+    tags: ["TypeScript", "Interactive UI", "Vercel"],
+    source: "https://github.com/Tejas3545/money-heist-quiz",
+    live: "https://money-heist-quiz.vercel.app",
+    detail: "A fan-made learning project · Not affiliated with Netflix",
+    number: "03",
+  },
+];
