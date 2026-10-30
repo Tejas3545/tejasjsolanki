@@ -1,49 +1,48 @@
 # Tejas J Solanki — Personal Developer Portfolio
 
-A developer portfolio and engineering showcase engineered with **Next.js App Router (v16), React 19, and Modern CSS**.
+A modern, high-performance personal developer portfolio and engineering showcase built with **Next.js App Router (v16), React 19, and Modern CSS**.
 
 - **Live Deployment**: [https://tejasjsolanki.vercel.app](https://tejasjsolanki.vercel.app)
 - **Source Repository**: [https://github.com/Tejas3545/tejasjsolanki](https://github.com/Tejas3545/tejasjsolanki)
-- **Internship**: WeIntern Pvt Ltd — Week 1 Frontend Engineering Task
+- **Organization**: WeIntern Pvt Ltd — Week 1 Frontend Engineering Assignment (Task 1)
 
 ---
 
-## Design System & Inspiration
+## Overview & Design System
 
-The design combines the tactile, editorial feel of a **lightweight notebook page** with the high-contrast precision of **studio dark mode**. 
-Inspired by the interaction patterns of [21st.dev](https://21st.dev), the clean portfolio architecture of [Purv Kabaria](https://purvkabaria.netlify.app/), and developer portfolio structures:
+The portfolio is designed around a clean, focused developer aesthetic inspired by modern engineering portfolios:
 
-- **Typography**: Apple SF Pro system font stack (`-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui`).
-- **Dual Theme Support**:
-  - **Notebook Page (Light Mode)**: Warm linen/paper tones (`#f7f6f2`), graphite text, terracotta orange accents (`#bd441e`), botanical sage (`#4e6a43`), and warm ochre.
-  - **Studio Obsidian (Dark Mode)**: Deep carbon obsidian (`#0e1110`), crisp contrast, and subtle borders inspired by modern developer tooling.
-- **Zero AI Slop**: No generic blue-purple gradient washes, no robotic AI emojis, no boilerplate copy. Pure hand-crafted CSS Grid, Flexbox, and native browser animations.
-- **Micro-Interactions & Smoothness**:
-  - Interactive 3D tilt hero workbench with preview switcher.
-  - Smooth tab switching across tech stack categories and project filters.
-  - Pulsing status availability indicator ("Available for internships & developer roles").
-  - Accessible reduced-motion toggle with persistent storage and system preference detection.
+- **Typography**: Apple SF Pro system typography (`-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui`) paired with `JetBrains Mono` for code and metadata accents.
+- **Color Palette & Themes**:
+  - **Studio Obsidian (Dark Mode)**: Deep carbon obsidian (`#080b11`), slate surfaces, subtle glass borders (`rgba(255, 255, 255, 0.09)`), and electric cyan accents (`#38bdf8`).
+  - **Crisp Craft (Light Mode)**: Crisp paper white (`#fbfcfd`), clean slate borders, high contrast text, and deep ocean blue accents (`#0284c7`).
+  - Seamless, persistent dark/light theme switching with system preference detection and zero-flicker hydration.
+- **Layout Rhythm**: Centered `max-w-3xl` container (`48rem` / `768px`) with balanced section rhythm, horizontal eyebrow dividers, and smooth micro-interactions.
 
 ---
 
-## Key Features
+## Core Features & Pages
 
-1. **Direct Instant Messaging & Communications Hub**:
-   - Replaced clunky email-copy buttons with direct, frictionless communication paths.
-   - **Direct WhatsApp Chat**: One-click instant WhatsApp chat with pre-formatted message generation for immediate mobile-to-mobile replies.
-   - **Direct Email Dispatch**: Real-time form submission directly to `tejassolanki5881@gmail.com` with spam trap protection and instant feedback.
-   - **Verified Channels**: Direct access to LinkedIn profile and GitHub repositories.
-2. **Experience & Journey Timeline**:
-   - Web Development Intern @ **WeIntern Pvt Ltd** (Semantic web architectures, CSS layout systems, responsive UI components).
-   - B.Tech in Information Technology @ **Atmiya University** (Rajkot, Gujarat — core CS, Android SDK, and database systems).
-3. **Engineering Project Showcases**:
-   - **SyncSpend**: Native Android personal finance app built with Kotlin, Jetpack Compose, Room SQLite, and WorkManager (100% offline-first).
-   - **Atmiya IT Portal**: Student attendance and academic analytics dashboard built with Python, Flask, JavaScript, and Excel data ingestion.
-   - **Money Heist Quiz**: Interactive game experiment built with TypeScript and deployed on Vercel.
-4. **Responsive Across All Viewports**:
-   - Zero horizontal overflow across 320px, 390px, 768px, 1080px, and 1440px screens.
-   - Mobile navigation drawer with keyboard Escape dismissal.
-   - Touch-friendly inputs and buttons.
+### 1. Home Page (`/`)
+- **Hero Banner**: Developer avatar from GitHub, headline, current role, location in Rajkot, academic details at Atmiya University, bio copy, and instant action pills (Resume, LinkedIn, GitHub, Email).
+- **Experience & Education**: Interactive segmented tab switcher (`[Work]` and `[Education]`) rendering timeline items with organization badges, roles, dates, engineering bullet points, and technology tags.
+- **Tech Stack**: 5-category tab filter (`Frontend`, `Backend`, `Mobile / Android`, `Databases`, `Tools`) displaying skill cards with SVG icons and card-lift hover physics.
+- **Highlights & Milestones**: 3-card metric showcase highlighting 30+ public GitHub repositories, hackathon entries, and academic engineering lead roles.
+- **Featured Projects**: 2-column responsive grid showcasing featured projects with custom SVG preview banners, external live demo links, source code links, and technology badges.
+- **GitHub Contributions**: 53-week contribution heat map with 7 daily rows, month labels, level indicators, and total annual activity.
+- **Direct Messaging Hub**: Direct communication channels (Email, LinkedIn, GitHub) alongside a responsive direct message contact form.
+
+### 2. Projects Showcase (`/projects`)
+- Filterable project catalog with category tabs: `All`, `Mobile / Android`, `Full-Stack Web`, `Systems & AI`.
+- In-depth project cards with preview banners, descriptions, live deployment links, and technology stacks (SyncSpend, Atmiya IT Portal, ADSCHACKATHON, Smart AI Business Assistant, Mega-AI, Quizi, Money Heist Quiz, AgroSense, CRM).
+
+### 3. Contact Page (`/contact`)
+- Dedicated contact portal matching the two-column layout.
+- Left column: Direct reach-out channels, response availability status badge ("Usually replies within a day"), and role availability badge ("Open to internships & full-time roles").
+- Right column: Clean contact form with Name, Email, and Message inputs, client-side validation, and instant dispatch confirmation.
+
+### 4. About Page (`/about`)
+- Biography detailing software engineering journey at Atmiya University, practical frontend internship at WeIntern Pvt Ltd, and core engineering philosophy (Offline-First Reliability, Semantic & Accessible UI, Clean Architecture).
 
 ---
 
@@ -52,50 +51,54 @@ Inspired by the interaction patterns of [21st.dev](https://21st.dev), the clean 
 ```text
 tejasjsolanki/
 ├── app/
-│   ├── layout.js          # Root layout with ThemeProvider, MotionProvider, SEO metadata
-│   ├── page.js            # Home: Hero studio, stats, experience timeline, work, toolkit, contact
-│   ├── globals.css        # Comprehensive CSS: Light notebook & dark studio themes, SF Pro font
+│   ├── layout.js          # Root layout with ThemeProvider, SEO metadata, SiteHeader, and Footer
+│   ├── page.js            # Home page: Hero, ExperienceTabs, TechStackTabs, Projects, Contributions, Contact
+│   ├── globals.css        # Responsive CSS: Obsidian Dark & Crisp Light themes, SF Pro typography
 │   ├── about/
-│   │   └── page.js        # Developer story, Atmiya University journey, core engineering principles
+│   │   └── page.js        # Developer biography, WeIntern internship focus, and engineering principles
 │   ├── projects/
-│   │   └── page.js        # Filterable project showcase, architecture breakdowns, live links
+│   │   └── page.js        # Full project catalog with category filtering and project cards
 │   ├── contact/
-│   │   └── page.js        # Direct WhatsApp and Email messaging hub, FAQs
-│   └── not-found.js       # 404 error page
+│   │   └── page.js        # Dedicated direct contact and messaging page
+│   └── not-found.js       # Custom 404 page
 ├── components/
-│   ├── data.js            # Developer bio, stats, experience, tech stack categories, projects data
-│   ├── interactions.js    # ThemeToggle, MotionToggle, HeroStudio, ProjectCollection, DirectContactHub
-│   ├── previews.js        # Custom CSS UI mockups (SyncSpend, Atmiya Portal, Money Heist Quiz)
-│   └── site.js            # Header, Footer, Section labels, and container helpers
+│   ├── data.js            # Profile, experience, tech stack categories, and project records
+│   ├── icons.js           # SVG icon components (Lucide-style & Tech icons)
+│   ├── interactions.js    # Client components: ThemeProvider, SiteHeader, Tabs, ProjectCard, Heatmap, Form
+│   └── site.js            # Site footer and ProjectsCatalog container
+├── public/
+│   ├── img/
+│   │   └── tejas.jpg      # Profile avatar
+│   └── resume.pdf         # Resume PDF document
 ├── screenshots/           # Acceptance test output screenshots
 │   ├── home-desktop.png   # Full desktop home view (1440px)
 │   ├── home-mobile.png    # Mobile view (390px)
-│   ├── projects.png       # Projects section view (1440px)
-│   └── contact.png        # Direct messaging and contact view (1440px)
+│   ├── projects.png       # Projects page view (1440px)
+│   └── contact.png        # Contact page view (1440px)
 ├── tests/
-│   └── browser.py         # Automated Playwright acceptance test suite and screenshot generator
+│   └── browser.py         # Automated Playwright test suite and screenshot generator
 ├── next.config.mjs
 └── package.json
 ```
 
 ---
 
-## Local Setup & Development
+## Local Development
 
-Prerequisites: Node.js 20.9+ (Turbopack supported).
+Prerequisites: Node.js 20.9+
 
 ```bash
-# Navigate to the project directory
+# Navigate into the project
 cd tejasjsolanki
 
 # Install dependencies
 npm install
 
-# Start local development server
+# Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Production Build
 
@@ -104,29 +107,11 @@ npm run build
 npm start
 ```
 
-### Running Automated Acceptance Tests
-
-```bash
-python tests/browser.py
-```
-
-Tests verify:
-- HTTP 200 on all routes (`/`, `/about`, `/projects`, `/contact`)
-- Zero horizontal layout overflow across 320px, 390px, 768px, 1440px viewports
-- Interactive preview switcher on the hero workbench
-- Category filtering for projects
-- Direct WhatsApp and Email form action triggers
-- Theme switching and motion pause persistence
-- Automatic high-resolution screenshot generation into `screenshots/`
-
 ---
 
-## Author & Contact Details
+## Quality & Standards
 
-- **Name**: Tejas J Solanki
-- **Location**: Rajkot, Gujarat, India
-- **University**: Atmiya University (B.Tech Information Technology)
-- **Email**: tejassolanki5881@gmail.com
-- **GitHub**: [https://github.com/Tejas3545](https://github.com/Tejas3545)
-- **LinkedIn**: [https://www.linkedin.com/in/tejas-j-solanki2476/](https://www.linkedin.com/in/tejas-j-solanki2476/)
-- **Live Portfolio**: [https://tejasjsolanki.vercel.app](https://tejasjsolanki.vercel.app)
+- **Semantic HTML5**: Native semantic tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<dl>`, `<footer>`).
+- **Responsive Layout**: Zero horizontal overflow from 320px mobile screens to large desktop monitors.
+- **Accessibility**: Keyboard navigable, visible focus rings (`:focus-visible`), alt attributes, and screen reader skip links.
+- **Fast Performance**: Statically prerendered pages via Next.js App Router for instant page transitions.

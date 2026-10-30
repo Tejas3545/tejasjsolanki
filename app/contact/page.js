@@ -1,73 +1,27 @@
-import { DirectContactHub, Reveal } from "../../components/interactions";
-import { SectionLabel, Arrow } from "../../components/site";
-import { profile } from "../../components/data";
+import { DirectContactSection } from "../../components/interactions";
 
 export const metadata = {
-  title: "Contact & Instant Chat",
+  title: "Contact",
   description:
-    "Get in touch with Tejas J Solanki directly via WhatsApp, direct email dispatch, or LinkedIn for internships, project work, and collaborations.",
+    "Get in touch with Tejas J Solanki for developer roles, software projects, or technical collaborations.",
 };
 
-export default function Contact() {
+export default function ContactPage() {
   return (
-    <>
-      <section className="page-intro container">
-        <p className="eyebrow">Instant Communications & Direct Line</p>
-        <h1>
-          Let’s start a<br />
-          <span className="accent-text">direct conversation.</span>
-        </h1>
-        <p>
-          Whether you’re hiring for an internship, looking for a developer for a web or Android project, or just want to chat tech—message me directly on WhatsApp or drop a note below.
+    <div className="scroll-block" style={{ paddingTop: "1rem" }}>
+      <div style={{ marginBottom: "2rem" }}>
+        <p className="eyebrow" style={{ marginBottom: "0.5rem" }}>
+          Inquiries
         </p>
-      </section>
+        <h1 className="hero-title font-display" style={{ marginBottom: "0.5rem" }}>
+          Contact
+        </h1>
+        <p style={{ color: "var(--muted-foreground)", fontSize: "0.9375rem", maxWidth: "40rem" }}>
+          Got a role, a project, or just a question? Pick whichever channel suits you. I read everything.
+        </p>
+      </div>
 
-      <section className="container section contact-page-section">
-        <DirectContactHub />
-      </section>
-
-      <section className="container faq-section section">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="FAQ">Quick Answers</SectionLabel>
-              <h2>
-                Common questions &<br />
-                <span className="muted-text">availability details.</span>
-              </h2>
-            </div>
-          </div>
-        </Reveal>
-
-        <div className="faq-grid">
-          <Reveal delay={60}>
-            <div className="faq-card">
-              <h4>Are you available for internships?</h4>
-              <p>
-                Yes. I am currently open to web development and Android engineering internships—both remote and on-site in Gujarat or across India.
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <div className="faq-card">
-              <h4>What is your primary development stack?</h4>
-              <p>
-                For Android: Kotlin, Jetpack Compose, Room SQLite, WorkManager, Coroutines. For Web: Next.js, React, JavaScript/TypeScript, Python (Flask/Django), Modern CSS.
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={180}>
-            <div className="faq-card">
-              <h4>How quickly do you reply on WhatsApp?</h4>
-              <p>
-                WhatsApp messages reach my phone directly and I usually respond within a few hours on business days.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-    </>
+      <DirectContactSection standalone={true} />
+    </div>
   );
 }

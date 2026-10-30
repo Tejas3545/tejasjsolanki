@@ -1,166 +1,117 @@
 import Link from "next/link";
-import { Reveal, Tilt, ExperienceTimeline } from "../../components/interactions";
-import { Arrow, ContactSection, SectionLabel, Toolkit } from "../../components/site";
 import { profile } from "../../components/data";
+import { ArrowRightIcon, FileTextIcon, MapPinIcon, GraduationCapIcon } from "../../components/icons";
 
 export const metadata = {
-  title: "About & Journey",
+  title: "About",
   description:
-    "Learn more about Tejas J Solanki, IT undergraduate at Atmiya University, web development intern at WeIntern, and builder of native Android and web projects.",
+    "Background, academic foundations, and engineering philosophy of Tejas J Solanki.",
 };
 
-export default function About() {
+export default function AboutPage() {
   return (
-    <>
-      <section className="page-intro container">
-        <p className="eyebrow">Background & Story / About Me</p>
-        <h1>
-          Builder by practice.<br />
-          <span className="accent-text">Curious by default.</span>
-        </h1>
-        <p>
-          I’m Tejas J Solanki—an Information Technology student, web development intern, and software builder based in Rajkot, Gujarat.
+    <div className="scroll-block" style={{ paddingTop: "1rem" }}>
+      <div style={{ marginBottom: "2rem" }}>
+        <p className="eyebrow" style={{ marginBottom: "0.5rem" }}>
+          Biography
         </p>
-      </section>
+        <h1 className="hero-title font-display" style={{ marginBottom: "0.5rem" }}>
+          About Me
+        </h1>
+        <p style={{ color: "var(--muted-foreground)", fontSize: "0.9375rem", maxWidth: "40rem" }}>
+          Undergraduate software engineer building offline-first mobile applications, responsive web systems, and data-driven tools.
+        </p>
+      </div>
 
-      {/* ---------------- Bio Grid ---------------- */}
-      <section className="container bio-grid section">
-        <Reveal>
-          <Tilt className="identity-card">
-            <div className="identity-top">
-              <span>{profile.location.toUpperCase()}</span>
-              <span>INDIA</span>
-            </div>
-            <div className="identity-monogram">
-              tjs<span className="brand-dot">.</span>
-            </div>
-            <div className="identity-bottom">
-              <strong>{profile.name}</strong>
-              <span>{profile.role}</span>
-              <div className="identity-lines" aria-hidden="true">
-                <i /><i /><i /><i /><i />
-              </div>
-            </div>
-          </Tilt>
-        </Reveal>
+      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+        {/* Story Section */}
+        <section>
+          <div className="section-divider">
+            <h2 className="eyebrow shrink-0">Background & Education</h2>
+            <span className="divider-line" aria-hidden="true" />
+          </div>
 
-        <Reveal delay={100}>
-          <div className="bio-copy">
-            <SectionLabel number="01">The Developer Story</SectionLabel>
-            <h2>
-              Turning ideas into<br />
-              <span className="muted-text">durable, usable software.</span>
-            </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem", color: "var(--muted-foreground)", fontSize: "0.9375rem", lineHeight: "1.7" }}>
             <p>
-              I am pursuing my Bachelor of Technology in Information Technology at <strong>Atmiya University</strong> in Rajkot. Alongside coursework, I spend my time engineering practical software: from native Android applications with offline-first SQLite synchronization to responsive student-facing web platforms.
+              I am an Information Technology student at <strong style={{ color: "var(--foreground)" }}>Atmiya University</strong> in Rajkot, Gujarat.
+              My work spans across native Android engineering with Kotlin and Jetpack Compose, modern frontend architectures with Next.js, and backend service development with Python and FastAPI.
             </p>
             <p>
-              As a Web Development Intern at <strong>WeIntern Pvt Ltd</strong>, I focus on core web technologies—semantic HTML5, modern CSS layouts (Grid and Flexbox), component architectures, accessibility, and clean repository maintenance.
+              I believe in building software that delivers a great user experience regardless of network constraints. That focus drove me to engineer <strong style={{ color: "var(--foreground)" }}>SyncSpend</strong>, an offline-first Android expense tracker with Room SQLite and WorkManager synchronization, and the <strong style={{ color: "var(--foreground)" }}>Atmiya IT Portal</strong>, replacing manual spreadsheets with real-time academic analytics for students and faculty.
+            </p>
+          </div>
+        </section>
+
+        {/* Internship at WeIntern */}
+        <section>
+          <div className="section-divider">
+            <h2 className="eyebrow shrink-0">Internship at WeIntern</h2>
+            <span className="divider-line" aria-hidden="true" />
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem", color: "var(--muted-foreground)", fontSize: "0.9375rem", lineHeight: "1.7" }}>
+            <p>
+              As a Web Development Intern at <strong style={{ color: "var(--foreground)" }}>WeIntern Pvt Ltd</strong>, I work on production frontend delivery. My daily work revolves around semantic HTML5 structure, modern CSS layout systems (Grid and Flexbox), component modularity, dark/light theme implementations, and strict accessibility standards.
             </p>
             <p>
-              I love working across both sides of an application: designing clear, tactile user interfaces and engineering the data flows, local databases, and background sync workers that keep things fast and resilient.
+              Each assignment emphasizes real-world engineering rigor: clean Git commit history, responsive cross-device validation from mobile to wide displays, and high-performance execution.
             </p>
+          </div>
+        </section>
 
-            <div className="bio-actions">
-              <a
-                className="btn btn-whatsapp-pill"
-                href="https://api.whatsapp.com/send?text=Hi%20Tejas,%20I%20read%20your%20About%20page%20and%20would%20like%20to%20connect!"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Chat on WhatsApp <Arrow />
-              </a>
-              <a
-                className="quiet-link"
-                href={profile.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LinkedIn Profile <Arrow />
-              </a>
+        {/* Core Principles */}
+        <section>
+          <div className="section-divider">
+            <h2 className="eyebrow shrink-0">Engineering Principles</h2>
+            <span className="divider-line" aria-hidden="true" />
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
+            <div className="experience-card card-lift">
+              <h3 style={{ fontSize: "0.875rem", fontWeight: "600", color: "var(--foreground)", marginBottom: "0.375rem" }}>
+                Offline-First Reliability
+              </h3>
+              <p style={{ fontSize: "0.75rem", color: "var(--muted-foreground)", lineHeight: "1.6" }}>
+                Prioritize local database persistence so interactions happen instantly, syncing to the cloud quietly in the background.
+              </p>
+            </div>
+
+            <div className="experience-card card-lift">
+              <h3 style={{ fontSize: "0.875rem", fontWeight: "600", color: "var(--foreground)", marginBottom: "0.375rem" }}>
+                Semantic & Accessible
+              </h3>
+              <p style={{ fontSize: "0.75rem", color: "var(--muted-foreground)", lineHeight: "1.6" }}>
+                Build accessible interfaces with standard HTML elements, visible focus states, and zero unnecessary visual clutter.
+              </p>
+            </div>
+
+            <div className="experience-card card-lift">
+              <h3 style={{ fontSize: "0.875rem", fontWeight: "600", color: "var(--foreground)", marginBottom: "0.375rem" }}>
+                Clean Architecture
+              </h3>
+              <p style={{ fontSize: "0.75rem", color: "var(--muted-foreground)", lineHeight: "1.6" }}>
+                Structure modular, typed code with clear boundaries between UI components, state managers, and data pipelines.
+              </p>
             </div>
           </div>
-        </Reveal>
-      </section>
+        </section>
 
-      {/* ---------------- Experience & Education Timeline ---------------- */}
-      <section className="section container">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="02">Education & Experience</SectionLabel>
-              <h2>
-                Milestones &<br />
-                <span className="muted-text">hands-on practice.</span>
-              </h2>
-            </div>
-          </div>
-        </Reveal>
-        <ExperienceTimeline />
-      </section>
-
-      {/* ---------------- Core Principles ---------------- */}
-      <section className="section container">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="03">How I Build</SectionLabel>
-              <h2>
-                Deliberate decisions.<br />
-                <span className="muted-text">Solid foundations.</span>
-              </h2>
-            </div>
-          </div>
-        </Reveal>
-        <div className="principles-grid">
-          {[
-            [
-              "01",
-              "Offline-First & Resilient",
-              "Networks are intermittent. Good software keeps working offline using local storage (Room, SQLite, IndexedDB) and queues sync tasks smoothly.",
-            ],
-            [
-              "02",
-              "End-to-End Ownership",
-              "From the first Figma sketch and component layout down to API endpoints, database schemas, and background workers—everything connects.",
-            ],
-            [
-              "03",
-              "No Shortcuts, No AI Slop",
-              "Real code written with understanding. Clean Git histories, tested component states, and continuous refinement instead of boilerplate templates.",
-            ],
-          ].map(([num, title, copy], idx) => (
-            <Reveal delay={idx * 80} key={num}>
-              <article className="principle">
-                <span className="principle-num">{num}</span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            </Reveal>
-          ))}
+        {/* CTA Bar */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", paddingTop: "0.5rem" }}>
+          <Link href="/projects" className="pill-btn">
+            <span>Explore Projects</span>
+            <ArrowRightIcon size={12} />
+          </Link>
+          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="pill-btn">
+            <FileTextIcon size={13} />
+            <span>View Resume (PDF)</span>
+          </a>
+          <Link href="/contact" className="pill-btn">
+            <span>Get in Touch</span>
+            <ArrowRightIcon size={12} />
+          </Link>
         </div>
-      </section>
-
-      {/* ---------------- Technical Capabilities ---------------- */}
-      <section className="section container">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="04">Skills & Tooling</SectionLabel>
-              <h2>
-                A flexible<br />
-                <span className="muted-text">engineering toolkit.</span>
-              </h2>
-            </div>
-            <Link href="/projects" className="quiet-link">
-              See in Projects <Arrow />
-            </Link>
-          </div>
-        </Reveal>
-        <Toolkit />
-      </section>
-
-      <ContactSection />
-    </>
+      </div>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { SiteHeader, MotionProvider, ThemeProvider } from "../components/interactions";
+import { ThemeProvider, SiteHeader } from "../components/interactions";
 import { Footer } from "../components/site";
 import "./globals.css";
 
@@ -19,6 +19,7 @@ export const metadata = {
     "Kotlin",
     "Jetpack Compose",
     "Python",
+    "FastAPI",
     "Flask",
     "Atmiya University",
     "Rajkot",
@@ -42,24 +43,27 @@ export const metadata = {
 
 export const viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f8f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#111312" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfcfd" },
+    { media: "(prefers-color-scheme: dark)", color: "#080b11" },
   ],
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/img/tejas.jpg" />
+      </head>
       <body>
         <ThemeProvider>
-          <MotionProvider>
-            <a className="skip-link" href="#main">
-              Skip to content
-            </a>
-            <SiteHeader />
-            <main id="main">{children}</main>
-            <Footer />
-          </MotionProvider>
+          <a className="skip-link" href="#main">
+            Skip to content
+          </a>
+          <SiteHeader />
+          <main id="main" className="site-shell main-content">
+            {children}
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

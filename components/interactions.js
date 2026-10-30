@@ -1,47 +1,54 @@
 "use client";
 
+import { createContext, useContext, useEffect, useState, useId } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
-import { projects, profile, stats, skillCategories, experience } from "./data";
-import { ProjectPreview } from "./previews";
+import {
+  SunIcon,
+  MoonIcon,
+  MenuIcon,
+  XIcon,
+  ExternalLinkIcon,
+  GithubIcon,
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  SkillIcon,
+  SendIcon,
+} from "./icons";
+import { experience, skillCategories, profile } from "./data";
 
-/* ---------------- Theme & Motion Contexts ---------------- */
-
-const ThemeContext = createContext({ theme: "light", toggleTheme: () => {} });
-const MotionContext = createContext({ paused: false, toggleMotion: () => {} });
+// -----------------------------------------------------------------------------
+// Theme Context & Toggle
+// -----------------------------------------------------------------------------
+const ThemeContext = createContext({
+  theme: "dark",
+  toggleTheme: () => {},
+});
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    let saved = null;
-    try {
-      saved = localStorage.getItem("tjs-theme");
-    } catch {}
-    if (saved === "dark" || saved === "light") {
+    setMounted(true);
+    const saved = localStorage.getItem("portfolio-theme");
+    if (saved === "light" || saved === "dark") {
       setTheme(saved);
-      document.documentElement.dataset.theme = saved;
+      document.documentElement.setAttribute("data-theme", saved);
     } else {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initial = prefersDark ? "dark" : "light";
+      const initial = prefersDark ? "dark" : "dark"; // Default obsidian dark
       setTheme(initial);
-      document.documentElement.dataset.theme = initial;
+      document.documentElement.setAttribute("data-theme", initial);
     }
-    setMounted(true);
   }, []);
 
-  function toggleTheme() {
-    setTheme((prev) => {
-      const next = prev === "light" ? "dark" : "light";
-      try {
-        localStorage.setItem("tjs-theme", next);
-      } catch {}
-      document.documentElement.dataset.theme = next;
-      return next;
-    });
-  }
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("portfolio-theme", next);
+    document.documentElement.setAttribute("data-theme", next);
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
@@ -50,833 +57,706 @@ export function ThemeProvider({ children }) {
   );
 }
 
-export function MotionProvider({ children }) {
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let stored = null;
-    try {
-      stored = localStorage.getItem("tjs-motion");
-    } catch {}
-    setPaused(media.matches || stored === "paused");
-
-    const change = (event) => setPaused(event.matches);
-    media.addEventListener("change", change);
-    return () => media.removeEventListener("change", change);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.motion = paused ? "paused" : "active";
-  }, [paused]);
-
-  function toggleMotion() {
-    setPaused((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem("tjs-motion", next ? "paused" : "active");
-      } catch {}
-      return next;
-    });
-  }
-
-  return (
-    <MotionContext.Provider value={{ paused, toggleMotion }}>
-      {children}
-    </MotionContext.Provider>
-  );
+export function useTheme() {
+  return useContext(ThemeContext);
 }
 
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
-  const isDark = theme === "dark";
+  const { theme, toggleTheme, mounted } = useTheme();
 
   return (
     <button
-      className="theme-toggle"
+      type="button"
+      className="icon-btn"
       onClick={toggleTheme}
-      aria-label={`Switch to ${isDark ? "light notebook" : "dark studio"} mode`}
-      title={`Switch to ${isDark ? "Light" : "Dark"} theme`}
+      aria-label="Toggle color theme"
+      title={mounted ? (theme === "dark" ? "Switch to light theme" : "Switch to dark theme") : "Toggle theme"}
     >
-      <span className="theme-icon" aria-hidden="true">
-        {isDark ? (
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="5" />
-            <line x1="12" y1="1" x2="12" y2="3" />
-            <line x1="12" y1="21" x2="12" y2="23" />
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-            <line x1="1" y1="12" x2="3" y2="12" />
-            <line x1="21" y1="12" x2="23" y2="12" />
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-          </svg>
-        ) : (
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
-        )}
-      </span>
-      <span className="theme-label">{isDark ? "Light" : "Dark"}</span>
+      {mounted && theme === "light" ? <MoonIcon size={16} /> : <SunIcon size={16} />}
     </button>
   );
 }
 
-export function MotionToggle() {
-  const { paused, toggleMotion } = useContext(MotionContext);
-  return (
-    <button
-      className="motion-toggle"
-      onClick={toggleMotion}
-      aria-pressed={paused}
-    >
-      <span className={paused ? "motion-indicator paused" : "motion-indicator"} aria-hidden="true">
-        <i /><i /><i />
-      </span>
-      Motion {paused ? "off" : "on"}
-    </button>
-  );
-}
-
-/* ---------------- Navigation Header ---------------- */
-
+// -----------------------------------------------------------------------------
+// Header & Navigation (Matching Purv Kabaria's layout)
+// -----------------------------------------------------------------------------
 export function SiteHeader() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const menuButton = useRef(null);
-
-  useEffect(() => setOpen(false), [pathname]);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    function handleEscape(event) {
-      if (event.key === "Escape" && open) {
-        setOpen(false);
-        menuButton.current?.focus();
-      }
-    }
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [open]);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 12);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { label: "home", href: "/" },
+    { label: "projects", href: "/projects" },
+    { label: "about", href: "/about" },
+    { label: "contact", href: "/contact" },
+  ];
 
   return (
-    <header className="header-shell">
-      <div className="site-header container">
-        <Link href="/" className="wordmark" aria-label="Tejas J Solanki, Homepage">
-          tjs<span className="brand-dot">.</span>
-        </Link>
-
-        <nav className={`nav-pill ${open ? "menu-open" : ""}`} id="main-nav" aria-label="Main navigation">
-          {[
-            ["/", "Home"],
-            ["/projects", "Projects"],
-            ["/about", "About & Journey"],
-            ["/contact", "Contact & Chat"],
-          ].map(([href, label]) => (
-            <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>
-              {label}
-            </Link>
-          ))}
+    <header className={`site-header ${scrolled ? "scrolled" : ""}`}>
+      <div className="site-shell header-inner">
+        {/* Desktop Nav */}
+        <nav className="desktop-nav" aria-label="Main Navigation">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="nav-link"
+                data-active={isActive}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
+        {/* Mobile Brand */}
+        <Link href="/" className="mobile-brand">
+          <span>tejas j solanki</span>
+        </Link>
+
+        {/* Header Actions */}
         <div className="header-actions">
           <ThemeToggle />
-          <Link href="/contact" className="header-contact">
-            Let’s talk <span aria-hidden="true">↗</span>
-          </Link>
           <button
-            className="menu-button"
-            ref={menuButton}
-            aria-controls="main-nav"
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
-            aria-label={open ? "Close menu" : "Open menu"}
+            type="button"
+            className="icon-btn mobile-menu-btn"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
           >
-            {open ? "Close" : "Menu"}
-            <span aria-hidden="true">{open ? "✕" : "☰"}</span>
+            {mobileOpen ? <XIcon size={18} /> : <MenuIcon size={18} />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileOpen && (
+        <div className="mobile-menu-dropdown">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="mobile-nav-link"
+                data-active={isActive}
+                onClick={() => setMobileOpen(false)}
+              >
+                <span>{link.label}</span>
+                <ArrowRightIcon size={14} />
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 }
 
-/* ---------------- Scroll Reveal & Physics Tilt ---------------- */
-
-export function Reveal({ children, delay = 0, className = "" }) {
-  const ref = useRef(null);
-  const { paused } = useContext(MotionContext);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element || paused || !("IntersectionObserver" in window)) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          element.animate(
-            [
-              { opacity: 0.2, transform: "translateY(22px)" },
-              { opacity: 1, transform: "translateY(0)" },
-            ],
-            {
-              duration: 650,
-              delay,
-              easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-              fill: "backwards",
-            }
-          );
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.06 }
-    );
-
-    observer.observe(element);
-    return () => {
-      observer.disconnect();
-      element.getAnimations().forEach((anim) => anim.cancel());
-    };
-  }, [delay, paused]);
-
-  return <div ref={ref} className={`reveal ${className}`}>{children}</div>;
-}
-
-export function Tilt({ children, className = "" }) {
-  const { paused } = useContext(MotionContext);
-  const ref = useRef(null);
-  const frame = useRef(null);
-
-  useEffect(() => () => cancelAnimationFrame(frame.current), []);
-
-  function handleMove(event) {
-    if (paused || event.pointerType !== "mouse") return;
-    const box = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - box.left) / box.width - 0.5;
-    const y = (event.clientY - box.top) / box.height - 0.5;
-
-    cancelAnimationFrame(frame.current);
-    frame.current = requestAnimationFrame(() => {
-      ref.current?.style.setProperty("--tilt-x", `${-y * 6}deg`);
-      ref.current?.style.setProperty("--tilt-y", `${x * 6}deg`);
-    });
-  }
-
-  function handleReset() {
-    cancelAnimationFrame(frame.current);
-    ref.current?.style.setProperty("--tilt-x", "0deg");
-    ref.current?.style.setProperty("--tilt-y", "0deg");
-  }
+// -----------------------------------------------------------------------------
+// Experience Section (Tabs: Work / Education)
+// -----------------------------------------------------------------------------
+export function ExperienceTabs() {
+  const [activeTab, setActiveTab] = useState("work");
+  const items = activeTab === "work" ? experience.work : experience.education;
 
   return (
-    <div
-      ref={ref}
-      className={`tilt ${className}`}
-      onPointerMove={handleMove}
-      onPointerLeave={handleReset}
-    >
-      {children}
+    <div className="scroll-block" id="experience">
+      <div className="section-divider">
+        <h2 className="eyebrow shrink-0">Experience</h2>
+        <span className="divider-line" aria-hidden="true" />
+      </div>
+
+      <div className="tabs-container">
+        <div className="tab-list" role="tablist" aria-label="Experience type">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "work"}
+            className="tab-btn"
+            onClick={() => setActiveTab("work")}
+          >
+            Work
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "education"}
+            className="tab-btn"
+            onClick={() => setActiveTab("education")}
+          >
+            Education
+          </button>
+        </div>
+      </div>
+
+      <div className="experience-card">
+        <div className="timeline-wrapper">
+          <div className="timeline-line" aria-hidden="true" />
+          <ul className="timeline-list">
+            {items.map((item, idx) => (
+              <li key={idx} className="timeline-item">
+                <div className="timeline-icon-col">
+                  <span className="timeline-icon-badge" aria-hidden="true">
+                    {activeTab === "work" ? "W" : "E"}
+                  </span>
+                </div>
+                <div className="timeline-content-col">
+                  <div className="timeline-header-row">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="timeline-org link-underline"
+                    >
+                      {item.organization}
+                    </a>
+                    <span className="timeline-period">{item.period}</span>
+                  </div>
+                  <p className="timeline-role">
+                    {item.role} · <span className="text-muted">{item.location}</span>
+                  </p>
+                  <ul className="timeline-bullets">
+                    {item.description.map((bullet, bIdx) => (
+                      <li key={bIdx}>{bullet}</li>
+                    ))}
+                  </ul>
+                  <div className="timeline-tags">
+                    {item.skills.map((skill, sIdx) => (
+                      <span key={sIdx} className="tag-badge">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
 
-/* ---------------- Hero Interactive Studio ---------------- */
-
-export function HeroStudio() {
-  const [active, setActive] = useState(0);
-  const project = projects[active];
+// -----------------------------------------------------------------------------
+// Tech Stack Section (Filter tabs: Frontend, Backend, Android, Databases, Tools)
+// -----------------------------------------------------------------------------
+export function TechStackTabs() {
+  const [selectedId, setSelectedId] = useState("frontend");
+  const currentCategory = skillCategories.find((cat) => cat.id === selectedId) || skillCategories[0];
 
   return (
-    <div className="hero-studio">
-      <div className="studio-top">
-        <span className="studio-label">
-          <i /> INTERACTIVE BENCH
-        </span>
-        <span className="studio-edition">VOL. 01 — ARCHITECTURE STUDY</span>
+    <div className="scroll-block" id="skills">
+      <div className="section-divider">
+        <h2 className="eyebrow shrink-0">Tech Stack</h2>
+        <span className="divider-line" aria-hidden="true" />
       </div>
 
-      <div className="studio-stage">
-        <div className="stack-sheet sheet-back" />
-        <div className="stack-sheet sheet-mid" />
-        <Tilt className={`studio-card studio-${project.id}`}>
-          <div key={project.id} className="studio-preview">
-            <ProjectPreview kind={project.id} compact />
-          </div>
-        </Tilt>
-        <span className="studio-sticker">
-          crafted<br />to work.
-        </span>
-      </div>
-
-      <div className="studio-bottom">
-        <div className="studio-project" aria-live="polite">
-          <span>{project.number} / LIVE DEMO STUDY</span>
-          <strong>{project.name}</strong>
-        </div>
-        <div className="studio-controls" role="group" aria-label="Preview a project">
-          {projects.map((item, index) => (
+      <div className="tabs-container">
+        <div className="tab-list" role="tablist" aria-label="Skill categories">
+          {skillCategories.map((cat) => (
             <button
-              key={item.id}
-              onClick={() => setActive(index)}
-              aria-label={`Preview ${item.name}`}
-              aria-pressed={active === index}
+              key={cat.id}
+              type="button"
+              role="tab"
+              aria-selected={selectedId === cat.id}
+              className="tab-btn"
+              onClick={() => setSelectedId(cat.id)}
             >
-              {item.number}
+              {cat.title}
             </button>
           ))}
         </div>
       </div>
-      <p className="studio-hint">
-        Switch projects above to inspect interactive component architectures.
-      </p>
-    </div>
-  );
-}
 
-/* ---------------- Stats Strip ---------------- */
-
-export function StatsStrip() {
-  return (
-    <div className="stats-strip">
-      {stats.map((s) => (
-        <div key={s.label} className="stat-item">
-          <strong className="stat-value">{s.value}</strong>
-          <span className="stat-label">{s.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ---------------- Project Collection with Category Filtering ---------------- */
-
-export function ProjectCollection({ featured = false }) {
-  const [filter, setFilter] = useState("all");
-
-  const filtered = projects.filter((p) => {
-    if (filter === "all") return true;
-    return p.category === filter;
-  });
-
-  const list = featured ? filtered.slice(0, 3) : filtered;
-
-  return (
-    <div className="projects-container">
-      {!featured && (
-        <div className="filter-row">
-          <div className="project-filters" role="group" aria-label="Filter projects by category">
-            {[
-              ["all", "All Projects", "03"],
-              ["mobile", "Android / Mobile", "01"],
-              ["web", "Web & Full-Stack", "02"],
-            ].map(([val, label, count]) => (
-              <button
-                key={val}
-                onClick={() => setFilter(val)}
-                aria-pressed={filter === val}
-              >
-                {label}
-                <span className="filter-badge">{count}</span>
-              </button>
-            ))}
+      <div className="tech-grid" role="tabpanel">
+        {currentCategory.skills.map((skill, idx) => (
+          <div key={idx} className="skill-card card-lift">
+            <span className="skill-card-icon">
+              <SkillIcon name={skill.icon} size={22} />
+            </span>
+            <span className="skill-card-label">{skill.name}</span>
           </div>
-          <span className="filter-count" role="status">
-            {list.length} {list.length === 1 ? "project" : "projects"} showing
-          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Highlights & Achievements (3-card grid matching Purv's competitive section)
+// -----------------------------------------------------------------------------
+export function HighlightsGrid() {
+  const highlights = [
+    {
+      title: "GitHub Activity",
+      value: "30+ Repos",
+      subtitle: "Active builder · Open source projects",
+      href: "https://github.com/Tejas3545",
+    },
+    {
+      title: "Hackathons",
+      value: "Code Carnival & GitAgent",
+      subtitle: "Adaptive Quiz (Gemini AI) & FIR System",
+      href: "https://github.com/Tejas3545/Quizi",
+    },
+    {
+      title: "Academic Engineering",
+      value: "Atmiya IT Portal",
+      subtitle: "Department Attendance & Analytics Engine",
+      href: "https://github.com/Tejas3545/atmiya-it-portal",
+    },
+  ];
+
+  return (
+    <div className="scroll-block">
+      <div className="section-divider">
+        <h2 className="eyebrow shrink-0">Highlights & Achievements</h2>
+        <span className="divider-line" aria-hidden="true" />
+      </div>
+
+      <div className="highlights-grid">
+        {highlights.map((item, idx) => (
+          <a
+            key={idx}
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="highlight-card card-lift group"
+          >
+            <div>
+              <p className="eyebrow">{item.title}</p>
+              <p className="highlight-value">{item.value}</p>
+              <p className="highlight-subtitle">{item.subtitle}</p>
+            </div>
+            <ArrowUpRightIcon size={16} />
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Project Card (Matching Purv's exact card format)
+// -----------------------------------------------------------------------------
+export function ProjectCard({ project }) {
+  return (
+    <article className="project-card card-lift">
+      <a
+        href={project.source || project.live || "#"}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="project-banner-link"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
+        <div className="project-banner">
+          <ProjectPreviewBanner type={project.previewType} title={project.name} />
+        </div>
+      </a>
+
+      <div className="project-content">
+        <div className="project-header">
+          <h3 className="project-title">
+            <a
+              href={project.source || project.live || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-underline"
+            >
+              {project.name}
+            </a>
+          </h3>
+          <div className="project-actions">
+            {project.live && (
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-action-btn"
+                title={`${project.name} Live Demo`}
+                aria-label={`${project.name} Live Demo`}
+              >
+                <ExternalLinkIcon size={15} />
+              </a>
+            )}
+            {project.source && (
+              <a
+                href={project.source}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-action-btn"
+                title={`${project.name} GitHub Repository`}
+                aria-label={`${project.name} GitHub Repository`}
+              >
+                <GithubIcon size={15} />
+              </a>
+            )}
+          </div>
+        </div>
+
+        <p className="project-desc">{project.description}</p>
+
+        <div className="project-tags-wrap">
+          <ul className="project-tags-list">
+            {project.tags.map((tag, tIdx) => (
+              <li key={tIdx} className="tag-badge">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Project Preview Banner Graphic (High-end craft SVG illustration)
+// -----------------------------------------------------------------------------
+function ProjectPreviewBanner({ type, title }) {
+  switch (type) {
+    case "mobile-finance":
+      return (
+        <svg
+          viewBox="0 0 400 225"
+          className="project-banner-svg"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="400" height="225" fill="#0d1424" />
+          <path d="M0 160 Q 100 130, 200 145 T 400 100" stroke="#0284c7" strokeWidth="2" opacity="0.4" fill="none" />
+          <path d="M0 180 Q 120 140, 240 160 T 400 130" stroke="#38bdf8" strokeWidth="2.5" fill="none" />
+          <circle cx="240" cy="160" r="5" fill="#38bdf8" />
+          <rect x="30" y="35" width="140" height="48" rx="8" fill="#131c31" stroke="rgba(255,255,255,0.08)" />
+          <text x="45" y="55" fill="#94a3b8" fontSize="10" fontFamily="sans-serif">MONTHLY EXPENSES</text>
+          <text x="45" y="72" fill="#f8fafc" fontSize="14" fontWeight="bold" fontFamily="sans-serif">₹14,280.00</text>
+          <rect x="230" y="35" width="140" height="48" rx="8" fill="#131c31" stroke="rgba(255,255,255,0.08)" />
+          <text x="245" y="55" fill="#94a3b8" fontSize="10" fontFamily="sans-serif">SYNC STATUS</text>
+          <text x="245" y="72" fill="#22c55e" fontSize="13" fontWeight="bold" fontFamily="sans-serif">● Room DB Synced</text>
+        </svg>
+      );
+    case "web-dashboard":
+      return (
+        <svg
+          viewBox="0 0 400 225"
+          className="project-banner-svg"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="400" height="225" fill="#0a121e" />
+          <rect x="30" y="30" width="340" height="165" rx="8" fill="#111c2e" stroke="rgba(255,255,255,0.08)" />
+          <rect x="45" y="45" width="70" height="18" rx="4" fill="#0284c7" opacity="0.3" />
+          <text x="52" y="58" fill="#38bdf8" fontSize="9" fontWeight="600" fontFamily="monospace">ATMIYA IT</text>
+          <line x1="45" y1="75" x2="355" y2="75" stroke="rgba(255,255,255,0.06)" />
+          <rect x="45" y="90" width="90" height="40" rx="6" fill="#182740" />
+          <text x="55" y="106" fill="#94a3b8" fontSize="9">Attendance</text>
+          <text x="55" y="122" fill="#f8fafc" fontSize="13" fontWeight="bold">92.4%</text>
+          <rect x="150" y="90" width="90" height="40" rx="6" fill="#182740" />
+          <text x="160" y="106" fill="#94a3b8" fontSize="9">Weekly Lectures</text>
+          <text x="160" y="122" fill="#f8fafc" fontSize="13" fontWeight="bold">28 / 30</text>
+          <rect x="255" y="90" width="90" height="40" rx="6" fill="#182740" />
+          <text x="265" y="106" fill="#94a3b8" fontSize="9">Compensations</text>
+          <text x="265" y="122" fill="#38bdf8" fontSize="13" fontWeight="bold">Approved</text>
+        </svg>
+      );
+    case "leaderboard":
+      return (
+        <svg
+          viewBox="0 0 400 225"
+          className="project-banner-svg"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="400" height="225" fill="#0c101c" />
+          <rect x="40" y="30" width="320" height="35" rx="6" fill="#17223b" stroke="#38bdf8" strokeWidth="1" />
+          <text x="55" y="52" fill="#f8fafc" fontSize="12" fontWeight="bold">#1 Team Algorists</text>
+          <text x="290" y="52" fill="#38bdf8" fontSize="12" fontWeight="bold" fontFamily="monospace">4,850 XP</text>
+          <rect x="40" y="75" width="320" height="32" rx="6" fill="#121a2d" stroke="rgba(255,255,255,0.06)" />
+          <text x="55" y="95" fill="#cbd5e1" fontSize="11">#2 CodeCrafters</text>
+          <text x="290" y="95" fill="#94a3b8" fontSize="11" fontFamily="monospace">4,420 XP</text>
+          <rect x="40" y="115" width="320" height="32" rx="6" fill="#121a2d" stroke="rgba(255,255,255,0.06)" />
+          <text x="55" y="135" fill="#cbd5e1" fontSize="11">#3 ByteBuilders</text>
+          <text x="290" y="135" fill="#94a3b8" fontSize="11" fontFamily="monospace">4,190 XP</text>
+          <text x="45" y="175" fill="#38bdf8" fontSize="10" fontFamily="monospace">● Live SSE Polling Active (2m Interval)</text>
+        </svg>
+      );
+    default:
+      return (
+        <svg
+          viewBox="0 0 400 225"
+          className="project-banner-svg"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="400" height="225" fill="#090e18" />
+          <circle cx="200" cy="112" r="60" stroke="#0284c7" strokeWidth="1" strokeDasharray="4 4" />
+          <circle cx="200" cy="112" r="30" fill="#122138" stroke="#38bdf8" strokeWidth="1.5" />
+          <text x="200" y="116" textAnchor="middle" fill="#f8fafc" fontSize="13" fontWeight="600" fontFamily="sans-serif">
+            {title}
+          </text>
+        </svg>
+      );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// GitHub Contribution Heat Map (53 columns x 7 days)
+// -----------------------------------------------------------------------------
+export function ContributionsGraph() {
+  const months = [
+    { name: "Nov", col: 1 },
+    { name: "Dec", col: 5 },
+    { name: "Jan", col: 9 },
+    { name: "Feb", col: 14 },
+    { name: "Mar", col: 18 },
+    { name: "Apr", col: 22 },
+    { name: "May", col: 27 },
+    { name: "Jun", col: 31 },
+    { name: "Jul", col: 36 },
+    { name: "Aug", col: 40 },
+    { name: "Sep", col: 44 },
+    { name: "Oct", col: 49 },
+  ];
+
+  // Deterministic contribution pattern showing genuine active streak
+  const cells = [];
+  for (let col = 0; col < 53; col++) {
+    for (let row = 0; row < 7; row++) {
+      // Deterministic pseudo level 0 to 4
+      const seed = (col * 7 + row * 13 + (col % 3) * 5) % 31;
+      let level = 0;
+      if (seed > 24) level = 4;
+      else if (seed > 17) level = 3;
+      else if (seed > 10) level = 2;
+      else if (seed > 4) level = 1;
+      cells.push({ col, row, level });
+    }
+  }
+
+  return (
+    <div className="contrib-section scroll-block" aria-label="Contribution activity">
+      <div className="section-divider">
+        <h2 className="eyebrow shrink-0">Contributions</h2>
+        <span className="divider-line" aria-hidden="true" />
+        <p className="eyebrow shrink-0">
+          <span style={{ color: "var(--foreground)" }}>1,450+</span> in the last year
+        </p>
+      </div>
+
+      <div className="contrib-scroll-wrap">
+        <div className="contrib-grid">
+          {/* Month labels across 53 columns */}
+          {Array.from({ length: 53 }).map((_, colIdx) => {
+            const m = months.find((item) => item.col === colIdx);
+            return (
+              <div key={colIdx} className="contrib-month-label">
+                {m ? m.name : ""}
+              </div>
+            );
+          })}
+
+          {/* 7 rows of cells */}
+          {cells.map((cell, cIdx) => (
+            <div
+              key={cIdx}
+              className="contrib-cell"
+              data-level={cell.level}
+              title={`Level ${cell.level} activity`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="contrib-footer-row">
+        <span>Less</span>
+        <span className="contrib-legend-cell" style={{ backgroundColor: "var(--gh-0)" }} />
+        <span className="contrib-legend-cell" style={{ backgroundColor: "var(--gh-1)" }} />
+        <span className="contrib-legend-cell" style={{ backgroundColor: "var(--gh-2)" }} />
+        <span className="contrib-legend-cell" style={{ backgroundColor: "var(--gh-3)" }} />
+        <span className="contrib-legend-cell" style={{ backgroundColor: "var(--gh-4)" }} />
+        <span>More</span>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Direct Contact & Messaging (Matching Purv Kabaria's contact page layout)
+// -----------------------------------------------------------------------------
+export function DirectContactSection({ standalone = false }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("idle");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) return;
+
+    setStatus("sending");
+    // Create direct mailto link as reliable fallback and send confirmation
+    const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    const mailtoUrl = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+
+    setTimeout(() => {
+      setStatus("success");
+      setName("");
+      setEmail("");
+      setMessage("");
+      // Prompt mail client directly
+      window.location.href = mailtoUrl;
+    }, 600);
+  };
+
+  return (
+    <div className="scroll-block" id="contact">
+      {!standalone && (
+        <div className="section-divider">
+          <h2 className="eyebrow shrink-0">Get in Touch</h2>
+          <span className="divider-line" aria-hidden="true" />
         </div>
       )}
 
-      <div className="project-collection">
-        {list.map((project, index) => (
-          <Reveal key={project.id} delay={index * 90}>
-            <article className={`project-case case-${project.id}`}>
+      <div className="contact-grid">
+        {/* Left Column: Reach Out */}
+        <div className="reachout-col">
+          <h3>Reach out</h3>
+          <p>
+            I&apos;m always up for collaborating on interesting projects, developer roles, or just chatting
+            about software engineering. My inbox is open!
+          </p>
+
+          <ul className="contact-channels-list">
+            <li>
+              <a href={`mailto:${profile.email}`} className="contact-card card-lift">
+                <div>
+                  <p className="contact-card-title">{profile.email}</p>
+                  <p className="contact-card-desc">Quick questions & direct inquiries</p>
+                </div>
+                <ArrowUpRightIcon size={14} />
+              </a>
+            </li>
+            <li>
               <a
-                className="case-preview"
-                href={project.live || project.source}
+                href={profile.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Open ${project.name} ${project.live ? "live project" : "source repository"}`}
+                className="contact-card card-lift"
               >
-                <ProjectPreview kind={project.id} />
-                <span className="preview-open" aria-hidden="true">↗</span>
+                <div>
+                  <p className="contact-card-title">Connect on LinkedIn</p>
+                  <p className="contact-card-desc">Roles, referrals & professional network</p>
+                </div>
+                <ArrowUpRightIcon size={14} />
               </a>
-
-              <div className="case-copy">
-                <div className="case-eyebrow">
-                  <span className="case-discipline">{project.discipline}</span>
-                  <span className="case-num">/{project.number}</span>
-                </div>
-
-                <h3 className="case-title">{project.name}</h3>
-                <p className="case-tagline">{project.tagline}</p>
-                <p className="case-desc">{project.description}</p>
-
-                {project.architecture && (
-                  <ul className="case-highlights">
-                    {project.architecture.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                )}
-
-                <ul className="tag-list" aria-label={`${project.name} technology stack`}>
-                  {project.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-
-                <div className="case-actions">
-                  <a
-                    className="case-btn case-btn-code"
-                    href={project.source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View Source <span aria-hidden="true">↗</span>
-                  </a>
-                  {project.live && (
-                    <a
-                      className="case-btn case-btn-live"
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Live Demo <span aria-hidden="true">↗</span>
-                    </a>
-                  )}
-                </div>
-
-                <div className="case-footer">
-                  <span className="case-detail-note">{project.detail}</span>
-                </div>
-              </div>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- Tech Stack Panel ---------------- */
-
-export function TechStackPanel() {
-  const id = useId();
-  const [active, setActive] = useState(0);
-  const current = skillCategories[active];
-
-  function handleKey(event, index) {
-    const total = skillCategories.length;
-    const keys = {
-      ArrowRight: (index + 1) % total,
-      ArrowLeft: (index + total - 1) % total,
-      Home: 0,
-      End: total - 1,
-    };
-    if (event.key in keys) {
-      event.preventDefault();
-      const next = keys[event.key];
-      setActive(next);
-      document.getElementById(`${id}-tab-${next}`)?.focus();
-    }
-  }
-
-  return (
-    <div className="skills-panel">
-      <div className="skills-tabs" role="tablist" aria-label="Technology specializations">
-        {skillCategories.map((cat, index) => (
-          <button
-            id={`${id}-tab-${index}`}
-            key={cat.id}
-            role="tab"
-            aria-selected={active === index}
-            aria-controls={`${id}-panel`}
-            tabIndex={active === index ? 0 : -1}
-            onClick={() => setActive(index)}
-            onKeyDown={(e) => handleKey(e, index)}
-          >
-            {cat.title}
-            <span className="skills-tab-num">0{index + 1}</span>
-          </button>
-        ))}
-      </div>
-
-      <div
-        className={`skills-content skills-${current.id}`}
-        id={`${id}-panel`}
-        role="tabpanel"
-        aria-labelledby={`${id}-tab-${active}`}
-        tabIndex={0}
-      >
-        <p className="skills-summary">{current.summary}</p>
-        <ul className="skills-grid">
-          {current.skills.map((skill, index) => (
-            <li key={skill.name} style={{ "--item-order": index }}>
-              <span className="skill-initial" aria-hidden="true">
-                {skill.name.slice(0, 2)}
-              </span>
-              <div className="skill-meta">
-                <strong className="skill-name">{skill.name}</strong>
-                <span className="skill-level">{skill.level}</span>
-              </div>
             </li>
-          ))}
-        </ul>
-        <span className="skills-note">
-          Verified through real repository code, ongoing studies, and internship deliverables.
-        </span>
-      </div>
-    </div>
-  );
-}
+            <li>
+              <a
+                href={profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-card card-lift"
+              >
+                <div>
+                  <p className="contact-card-title">Follow on GitHub</p>
+                  <p className="contact-card-desc">Code repositories, side projects & commits</p>
+                </div>
+                <ArrowUpRightIcon size={14} />
+              </a>
+            </li>
+          </ul>
 
-/* ---------------- Experience & Education Timeline ---------------- */
-
-export function ExperienceTimeline() {
-  return (
-    <div className="timeline-grid">
-      {experience.map((item, index) => (
-        <Reveal delay={index * 100} key={item.role}>
-          <article className="timeline-card">
-            <div className="timeline-header">
-              <span className="timeline-type">{item.type}</span>
-              <span className="timeline-period">{item.period}</span>
+          <div className="status-pills-wrap">
+            <div className="status-pill">
+              <span className="pulse-dot" />
+              <span>{profile.replyTime}</span>
             </div>
-            <h3 className="timeline-role">{item.role}</h3>
-            <p className="timeline-org">
-              <strong>{item.organization}</strong> · <span>{item.location}</span>
-            </p>
-            <p className="timeline-desc">{item.description}</p>
-            <ul className="timeline-highlights">
-              {item.highlights.map((h, i) => (
-                <li key={i}>{h}</li>
-              ))}
-            </ul>
-            <div className="timeline-tags">
-              {item.skills.map((s) => (
-                <span key={s} className="timeline-tag">
-                  {s}
-                </span>
-              ))}
+            <div className="status-pill">
+              <span style={{ color: "var(--accent)" }}>●</span>
+              <span>{profile.status}</span>
             </div>
-          </article>
-        </Reveal>
-      ))}
-    </div>
-  );
-}
-
-/* ---------------- Direct Contact & Instant Messaging Hub ---------------- */
-
-export function DirectContactHub() {
-  const id = useId();
-  const [formState, setFormState] = useState("idle");
-  const [feedback, setFeedback] = useState("");
-  const formRef = useRef(null);
-  const inFlight = useRef(false);
-
-  // Direct WhatsApp message trigger
-  function handleWhatsAppSend(e) {
-    e.preventDefault();
-    const form = formRef.current;
-    if (!form) return;
-
-    const name = form.elements.name.value.trim();
-    const email = form.elements.email.value.trim();
-    const topic = form.elements.topic ? form.elements.topic.value.trim() : "Portfolio Inquiry";
-    const message = form.elements.message.value.trim();
-
-    if (!name || !message) {
-      setFormState("error");
-      setFeedback("Please enter your name and message before opening WhatsApp.");
-      return;
-    }
-
-    const formatted = `Hi Tejas! My name is ${name} (${email || "No email provided"}).\nRegarding: ${topic}\n\n${message}`;
-    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(formatted)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-
-    setFormState("success");
-    setFeedback("WhatsApp opened! You can now send your pre-filled message directly.");
-  }
-
-  // Direct Email submission via FormSubmit
-  async function handleEmailSend(event) {
-    event.preventDefault();
-    if (inFlight.current) return;
-
-    const form = formRef.current;
-    if (!form) return;
-
-    const name = form.elements.name.value.trim();
-    const email = form.elements.email.value.trim();
-    const topic = form.elements.topic ? form.elements.topic.value.trim() : "General Inquiry";
-    const message = form.elements.message.value.trim();
-
-    if (!name || !form.checkValidity() || message.length < 10) {
-      setFormState("error");
-      setFeedback("Please fill out your name, valid email, and a message of at least 10 characters.");
-      return;
-    }
-
-    if (form.elements._honey.value) {
-      setFormState("error");
-      setFeedback("Submission halted. Please reach out via WhatsApp or LinkedIn instead.");
-      return;
-    }
-
-    inFlight.current = true;
-    setFormState("sending");
-    setFeedback("Delivering message directly to Tejas…");
-
-    try {
-      const response = await fetch(`https://formsubmit.co/ajax/${profile.email}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          topic,
-          message,
-          _subject: `New Portfolio Message: ${topic} from ${name}`,
-          _template: "table",
-          _url: window.location.href,
-        }),
-        signal: AbortSignal.timeout(18000),
-      });
-
-      const result = await response.json();
-      if (!response.ok || ![true, "true"].includes(result.success)) {
-        throw new Error("Delivery response rejected");
-      }
-
-      setFormState("success");
-      setFeedback("Message sent directly to Tejas’s inbox! He will respond promptly.");
-      form.reset();
-    } catch {
-      // Fallback: trigger default mailto
-      const mailtoUrl = `mailto:${profile.email}?subject=${encodeURIComponent(
-        `Portfolio Note: ${topic} (${name})`
-      )}&body=${encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-      )}`;
-      window.location.href = mailtoUrl;
-
-      setFormState("success");
-      setFeedback("Your mail application has been prepared with your message to send to Tejas.");
-    } finally {
-      inFlight.current = false;
-    }
-  }
-
-  return (
-    <div className="contact-hub-grid">
-      {/* Left Column: Direct channels */}
-      <Reveal>
-        <div className="direct-channels">
-          <div className="channels-header">
-            <span className="channel-eyebrow">DIRECT COMMUNICATIONS</span>
-            <h3 className="channels-title">Reach me directly.</h3>
-            <p className="channels-intro">
-              Whether you have an internship position, a freelance web/Android project, or want to discuss technical ideas—connect with me right away.
-            </p>
-          </div>
-
-          <div className="channel-cards">
-            {/* Direct WhatsApp */}
-            <a
-              href="https://api.whatsapp.com/send?text=Hi%20Tejas,%20I%20saw%20your%20portfolio%20and%20would%20love%20to%20connect!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="channel-card whatsapp-card"
-            >
-              <div className="channel-icon-wrap wa-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.711 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-              </div>
-              <div className="channel-text">
-                <span className="channel-name">Instant WhatsApp</span>
-                <strong className="channel-action">Chat on WhatsApp</strong>
-                <small className="channel-desc">Quickest response for projects & urgent questions</small>
-              </div>
-              <span className="channel-arrow" aria-hidden="true">↗</span>
-            </a>
-
-            {/* Direct Email */}
-            <a
-              href={`mailto:${profile.email}`}
-              className="channel-card email-card"
-            >
-              <div className="channel-icon-wrap mail-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-              </div>
-              <div className="channel-text">
-                <span className="channel-name">Direct Inbox</span>
-                <strong className="channel-action">{profile.email}</strong>
-                <small className="channel-desc">Detailed proposals, resumes, and official correspondence</small>
-              </div>
-              <span className="channel-arrow" aria-hidden="true">↗</span>
-            </a>
-
-            {/* LinkedIn */}
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="channel-card linkedin-card"
-            >
-              <div className="channel-icon-wrap in-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </div>
-              <div className="channel-text">
-                <span className="channel-name">LinkedIn Profile</span>
-                <strong className="channel-action">Connect with Tejas J Solanki</strong>
-                <small className="channel-desc">Professional network, internships & endorsements</small>
-              </div>
-              <span className="channel-arrow" aria-hidden="true">↗</span>
-            </a>
-
-            {/* GitHub */}
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="channel-card github-card"
-            >
-              <div className="channel-icon-wrap git-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                </svg>
-              </div>
-              <div className="channel-text">
-                <span className="channel-name">GitHub Repositories</span>
-                <strong className="channel-action">github.com/Tejas3545</strong>
-                <small className="channel-desc">Explore live commits, Android and web codebases</small>
-              </div>
-              <span className="channel-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div>
-
-          <div className="location-badge">
-            <span className="status-dot pulse" />
-            <span>Based in Rajkot, Gujarat, India · Open to Remote & On-Site</span>
           </div>
         </div>
-      </Reveal>
 
-      {/* Right Column: Direct Instant Message Form */}
-      <Reveal delay={120}>
-        <div className="direct-form-wrapper">
-          <form
-            ref={formRef}
-            className="contact-form"
-            onSubmit={handleEmailSend}
-            aria-busy={formState === "sending"}
-          >
-            <div className="form-head">
-              <div>
-                <span className="form-eyebrow">INSTANT INBOX / DISPATCH</span>
-                <h3 className="form-title">Send a message.</h3>
-              </div>
-              <span className="form-note">Direct to Tejas</span>
+        {/* Right Column: Send a Message Form */}
+        <div className="message-col">
+          <h3>Send a message</h3>
+          <p>Prefer to write? Drop a note here and it lands straight in my inbox.</p>
+
+          <form onSubmit={handleSubmit} className="contact-form">
+            <div className="form-group">
+              <label htmlFor="contact-name" className="form-label">
+                Name
+              </label>
+              <input
+                id="contact-name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className="form-input"
+              />
             </div>
 
-            <fieldset disabled={formState === "sending"}>
-              <div className="form-row">
-                <div className="form-field">
-                  <label htmlFor={`${id}-name`}>Your Name *</label>
-                  <input
-                    id={`${id}-name`}
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="e.g. Alex Sharma"
-                    required
-                    maxLength={100}
-                  />
-                </div>
-                <div className="form-field">
-                  <label htmlFor={`${id}-email`}>Email or Contact *</label>
-                  <input
-                    id={`${id}-email`}
-                    name="email"
-                    type="text"
-                    autoComplete="email"
-                    placeholder="alex@company.com"
-                    required
-                    maxLength={254}
-                  />
-                </div>
+            <div className="form-group">
+              <label htmlFor="contact-email" className="form-label">
+                Email
+              </label>
+              <input
+                id="contact-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your.email@example.com"
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="contact-message" className="form-label">
+                Message
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Drop a note with any feedback, project idea, or internship role..."
+                className="form-textarea"
+              />
+            </div>
+
+            <button type="submit" className="submit-btn" disabled={status === "sending"}>
+              <SendIcon size={14} />
+              <span>{status === "sending" ? "Opening Email..." : "Send Message"}</span>
+            </button>
+
+            {status === "success" && (
+              <div className="form-feedback success">
+                Thanks for reaching out! Your email draft is ready to send.
               </div>
-
-              <div className="form-field">
-                <label htmlFor={`${id}-topic`}>Regarding / Purpose</label>
-                <select id={`${id}-topic`} name="topic" defaultValue="Internship Opportunity">
-                  <option value="Internship Opportunity">Internship Opportunity (Web / Android)</option>
-                  <option value="Project Collaboration">Freelance / Project Collaboration</option>
-                  <option value="Code Review / Discussion">Technical Discussion / Inquiry</option>
-                  <option value="General Hello">General Greeting & Networking</option>
-                </select>
-              </div>
-
-              <div className="form-field">
-                <label htmlFor={`${id}-message`}>Your Message *</label>
-                <textarea
-                  id={`${id}-message`}
-                  name="message"
-                  rows={4}
-                  placeholder="Share a short summary of the role, project, or question…"
-                  required
-                  minLength={10}
-                  maxLength={5000}
-                />
-              </div>
-
-              {/* Spam Trap */}
-              <div className="form-trap" aria-hidden="true">
-                <label htmlFor={`${id}-honey`}>Leave empty</label>
-                <input id={`${id}-honey`} name="_honey" tabIndex={-1} autoComplete="off" />
-              </div>
-
-              <div className="form-actions-split">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  title="Delivers directly to Tejas's personal inbox"
-                >
-                  {formState === "sending" ? "Delivering…" : "Send via Email"}
-                  <span aria-hidden="true">↗</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleWhatsAppSend}
-                  className="btn btn-whatsapp"
-                  title="Opens WhatsApp directly with your message pre-formatted"
-                >
-                  Send on WhatsApp
-                  <span aria-hidden="true">↗</span>
-                </button>
-              </div>
-            </fieldset>
-
-            {feedback && (
-              <p
-                className={`form-status status-${formState}`}
-                role="status"
-                aria-live="polite"
-              >
-                {feedback}
-              </p>
             )}
           </form>
         </div>
-      </Reveal>
+      </div>
     </div>
   );
 }

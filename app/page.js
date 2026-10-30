@@ -1,151 +1,160 @@
 import Link from "next/link";
-import { HeroStudio, ProjectCollection, Reveal, StatsStrip, ExperienceTimeline } from "../components/interactions";
-import { Arrow, SectionLabel, ContactSection, Toolkit } from "../components/site";
-import { profile } from "../components/data";
+import { profile, projects } from "../components/data";
+import {
+  MapPinIcon,
+  MailIcon,
+  GraduationCapIcon,
+  FileTextIcon,
+  LinkedinIcon,
+  GithubIcon,
+  ArrowRightIcon,
+} from "../components/icons";
+import {
+  ExperienceTabs,
+  TechStackTabs,
+  HighlightsGrid,
+  ProjectCard,
+  ContributionsGraph,
+  DirectContactSection,
+} from "../components/interactions";
 
-export default function Home() {
+export default function HomePage() {
+  const featuredProjects = projects.filter((p) => p.featured);
+
   return (
     <>
       {/* ---------------- Hero Section ---------------- */}
-      <section className="hero profile-hero container">
-        <div className="hero-copy">
-          <div className="status-badge">
-            <span className="status-dot pulse" />
-            <span className="status-text">{profile.status}</span>
+      <section className="hero-section">
+        <div className="hero-profile-row">
+          <div className="avatar-wrapper">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/img/tejas.jpg"
+              alt={`${profile.name} profile`}
+              className="avatar-img"
+            />
           </div>
-
-          <h1 className="hero-name">
-            Tejas J<br />
-            <span className="word-accent">
-              Solanki
-              <span className="word-underline" />
-            </span>
-            <span className="name-period">.</span>
-          </h1>
-
-          <p className="profile-role">{profile.role}</p>
-          <p className="hero-description">{profile.headline}</p>
-
-          <dl className="profile-facts">
-            <div>
-              <dt>Location</dt>
-              <dd>{profile.location}</dd>
-            </div>
-            <div>
-              <dt>Education</dt>
-              <dd>BTech IT @ {profile.university}</dd>
-            </div>
-          </dl>
-
-          <div className="hero-actions">
-            <Link className="btn btn-ink" href="#projects-showcase">
-              View Projects <Arrow />
-            </Link>
-            <a
-              className="btn btn-whatsapp-pill"
-              href="https://api.whatsapp.com/send?text=Hi%20Tejas,%20I%20saw%20your%20portfolio%20and%20would%20love%20to%20connect!"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Chat on WhatsApp <Arrow />
-            </a>
-            <a className="btn btn-outline" href="#get-in-touch">
-              Direct Contact <Arrow />
-            </a>
-          </div>
-
-          <div className="profile-socials">
-            <a href={profile.github} target="_blank" rel="noopener noreferrer">
-              GitHub <Arrow />
-            </a>
-            <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
-              LinkedIn <Arrow />
-            </a>
-            <Link href="/about">
-              About & Journey <Arrow />
-            </Link>
+          <div className="hero-headings">
+            <h1 className="hero-title font-display">{profile.name}</h1>
+            <p className="hero-subtitle">{profile.role}</p>
           </div>
         </div>
 
-        <HeroStudio />
-      </section>
-
-      {/* ---------------- Quick Stats Banner ---------------- */}
-      <section className="container">
-        <StatsStrip />
-      </section>
-
-      {/* ---------------- Experience & Education (Inspired by Purv & Punja) ---------------- */}
-      <section className="section container" id="experience">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="01">Experience & Journey</SectionLabel>
-              <h2>
-                Academic foundation.<br />
-                <span className="muted-text">Practical software engineering.</span>
-              </h2>
-            </div>
-            <Link className="quiet-link" href="/about">
-              Detailed Journey <Arrow />
-            </Link>
+        {/* Quick Meta List */}
+        <dl className="hero-meta-list">
+          <div className="hero-meta-item">
+            <dt className="eyebrow">Location</dt>
+            <dd className="hero-meta-val">
+              <MapPinIcon size={13} className="text-muted" />
+              <span>{profile.location}</span>
+            </dd>
           </div>
-        </Reveal>
-        <ExperienceTimeline />
+
+          <div className="hero-meta-item">
+            <dt className="eyebrow">Email</dt>
+            <dd className="hero-meta-val">
+              <a href={`mailto:${profile.email}`} className="link-underline hero-meta-val">
+                <MailIcon size={13} className="text-muted" />
+                <span>{profile.email}</span>
+              </a>
+            </dd>
+          </div>
+
+          <div className="hero-meta-item">
+            <dt className="eyebrow">Studying</dt>
+            <dd className="hero-meta-val">
+              <GraduationCapIcon size={13} className="text-muted" />
+              <span>{profile.degree} @ {profile.university}</span>
+            </dd>
+          </div>
+        </dl>
+
+        {/* Bio Copy */}
+        <div className="hero-bio">
+          <p>{profile.bio}</p>
+          <p>
+            Currently exploring{" "}
+            {profile.exploring.map((item, idx) => (
+              <span key={item}>
+                <span className="highlight-word">{item}</span>
+                {idx < profile.exploring.length - 1 ? ", " : "."}
+              </span>
+            ))}
+          </p>
+        </div>
+
+        {/* Action Pills */}
+        <div className="hero-cta-row">
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pill-btn"
+          >
+            <FileTextIcon size={13} />
+            <span>Resume</span>
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pill-btn"
+          >
+            <LinkedinIcon size={13} />
+            <span>LinkedIn</span>
+          </a>
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pill-btn"
+          >
+            <GithubIcon size={13} />
+            <span>GitHub</span>
+          </a>
+          <a href={`mailto:${profile.email}`} className="pill-btn">
+            <MailIcon size={13} />
+            <span>Email</span>
+          </a>
+        </div>
       </section>
+
+      {/* ---------------- Experience & Education ---------------- */}
+      <ExperienceTabs />
+
+      {/* ---------------- Tech Stack ---------------- */}
+      <TechStackTabs />
+
+      {/* ---------------- Highlights & Achievements ---------------- */}
+      <HighlightsGrid />
 
       {/* ---------------- Featured Projects ---------------- */}
-      <section className="section container" id="projects-showcase">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="02">Selected Work</SectionLabel>
-              <h2>
-                Built to solve<br />
-                <span className="muted-text">real engineering problems.</span>
-              </h2>
-            </div>
-            <p>
-              Offline-first architectures, university dashboards,<br />
-              and real-time interactive systems. Source is fully public.
-            </p>
-          </div>
-        </Reveal>
+      <section className="scroll-block" id="projects">
+        <div className="section-divider">
+          <h2 className="eyebrow shrink-0">Featured Projects</h2>
+          <span className="divider-line" aria-hidden="true" />
+          <Link
+            href="/projects"
+            className="eyebrow link-underline shrink-0"
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}
+          >
+            <span>All projects</span>
+            <ArrowRightIcon size={12} />
+          </Link>
+        </div>
 
-        <ProjectCollection featured />
-
-        <Reveal>
-          <div className="section-end">
-            <span>Explore architecture details, schemas & source code.</span>
-            <Link className="quiet-link" href="/projects">
-              Browse full portfolio collection <Arrow />
-            </Link>
-          </div>
-        </Reveal>
+        <div className="projects-grid">
+          {featuredProjects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
       </section>
 
-      {/* ---------------- Technical Capabilities & Toolkit ---------------- */}
-      <section className="section container" id="skills">
-        <Reveal>
-          <div className="section-heading">
-            <div>
-              <SectionLabel number="03">Technical Capabilities</SectionLabel>
-              <h2>
-                Tools & Stacks<br />
-                <span className="muted-text">proven through actual code.</span>
-              </h2>
-            </div>
-            <p>
-              Categorized breakdown of technologies used across<br />
-              Android, full-stack web, and database systems.
-            </p>
-          </div>
-        </Reveal>
-        <Toolkit />
-      </section>
+      {/* ---------------- GitHub Contributions Heatmap ---------------- */}
+      <ContributionsGraph />
 
-      {/* ---------------- Direct Contact & WhatsApp Hub ---------------- */}
-      <ContactSection />
+      {/* ---------------- Direct Contact & Messaging ---------------- */}
+      <DirectContactSection />
     </>
   );
 }
