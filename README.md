@@ -4,7 +4,7 @@ A modern, high-performance personal developer portfolio and engineering showcase
 
 - **Live Deployment**: [https://tejasjsolanki.vercel.app](https://tejasjsolanki.vercel.app)
 - **Source Repository**: [https://github.com/Tejas3545/tejasjsolanki](https://github.com/Tejas3545/tejasjsolanki)
-- **Organization**: WeIntern Pvt Ltd — Week 1 Frontend Engineering Assignment (Task 1)
+- **Organization**: WeIntern Pvt Ltd — Week 1 Frontend Engineering Assignment (Task- 1)
 
 ---
 
