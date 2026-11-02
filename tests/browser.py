@@ -25,7 +25,7 @@ def main():
         for width in (320, 390, 768, 1200):
             page.set_viewport_size({"width": width, "height": 1000})
             for route in ROUTES:
-                response = page.goto(BASE + route, wait_until="networkidle")
+                response = page.goto(BASE + route, wait_until="load")
                 assert response.status == 200, (route, response.status)
                 assert page.locator("h1").count() >= 1
                 assert page.evaluate(
@@ -34,7 +34,7 @@ def main():
 
         # 2. Desktop Full Page Screenshot & Centering Verification (1440x900)
         page.set_viewport_size({"width": 1440, "height": 900})
-        page.goto(BASE, wait_until="networkidle")
+        page.goto(BASE, wait_until="load")
         time.sleep(0.5)
 
         # Centering check: main content must be ~768px wide and centered (margins ~336px)
@@ -49,26 +49,26 @@ def main():
 
         # 3. Mobile View (390x844)
         page.set_viewport_size({"width": 390, "height": 844})
-        page.goto(BASE, wait_until="networkidle")
+        page.goto(BASE, wait_until="load")
         time.sleep(0.5)
         page.screenshot(path=str(screenshots / "home-mobile.png"), full_page=False)
         print("Captured screenshots/home-mobile.png")
 
         # 4. Projects Page Screenshot (1440x900)
         page.set_viewport_size({"width": 1440, "height": 900})
-        page.goto(BASE + "/projects", wait_until="networkidle")
+        page.goto(BASE + "/projects", wait_until="load")
         time.sleep(0.5)
         page.screenshot(path=str(screenshots / "projects.png"), full_page=True)
         print("Captured screenshots/projects.png")
 
         # 5. Contact Page Screenshot (1440x900)
-        page.goto(BASE + "/contact", wait_until="networkidle")
+        page.goto(BASE + "/contact", wait_until="load")
         time.sleep(0.5)
         page.screenshot(path=str(screenshots / "contact.png"), full_page=True)
         print("Captured screenshots/contact.png")
 
         # 6. Explicit 8-Point Verification on Home Page
-        page.goto(BASE, wait_until="networkidle")
+        page.goto(BASE, wait_until="load")
 
         # Requirement 1: Exploring Machine Learning, GHL, LLM and Deep Learning
         exploring_text = page.locator(".hero-bio").inner_text()
@@ -119,14 +119,16 @@ def main():
 
         # Requirement 6: Experience section company logos and correct joining dates
         weintern_period = page.locator(".timeline-item:has-text('WeIntern Pvt Ltd') .timeline-period").inner_text()
-        assert "Oct 2024 — Present" in weintern_period
-        zidio_period = page.locator(".timeline-item:has-text('Zidio Development') .timeline-period").inner_text()
-        assert "Jun 2024 — Sep 2024" in zidio_period
+        assert "Oct 2026 — Present" in weintern_period
+        persevex_period = page.locator(".timeline-item:has-text('Persevex') .timeline-period").inner_text()
+        assert "Nov 2025 — Present" in persevex_period
 
         # Logo img check
         weintern_logo = page.locator(".timeline-item:has-text('WeIntern Pvt Ltd') .timeline-logo-img")
         assert weintern_logo.is_visible()
-        print("Verified Req 6: Experience logos & dates (Oct 2024 — Present, Jun 2024 — Sep 2024).")
+        persevex_logo = page.locator(".timeline-item:has-text('Persevex') .timeline-logo-img")
+        assert persevex_logo.is_visible()
+        print("Verified Req 6: Experience logos & dates (WeIntern: Oct 2026 — Present, Persevex: Nov 2025 — Present).")
 
         # Requirement 7: Tech Stack icons have color SVGs
         skill_svg = page.locator("#skills .skill-card-icon svg").first

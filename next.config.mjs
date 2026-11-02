@@ -1,5 +1,16 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const nextConfig = {
   poweredByHeader: false,
+  turbopack: {
+    root: __dirname,
+  },
+  experimental: {
+    cpus: 1,
+  },
   async headers() {
     return [
       {

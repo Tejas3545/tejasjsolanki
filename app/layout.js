@@ -39,6 +39,14 @@ export const metadata = {
     title: "Tejas J Solanki — Full-Stack Developer & Android Builder",
     description: "Personal developer portfolio and technical project showcases.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/img/logo.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/img/logo.png",
+  },
 };
 
 export const viewport = {
@@ -52,7 +60,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/img/tejas.jpg" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/img/logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/img/logo.png" />
       </head>
       <body>
         <ThemeProvider>

@@ -51,7 +51,7 @@ export default function AboutPage() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem", color: "var(--muted-foreground)", fontSize: "0.9375rem", lineHeight: "1.7" }}>
             <p>
-              As a Web Development Intern at <strong style={{ color: "var(--foreground)" }}>WeIntern Pvt Ltd</strong>, I work on production frontend delivery. My daily work revolves around semantic HTML5 structure, modern CSS layout systems (Grid and Flexbox), component modularity, dark/light theme implementations, and strict accessibility standards.
+              As a Full Stack Web Developer Intern at <strong style={{ color: "var(--foreground)" }}>WeIntern Pvt Ltd</strong>, I work on production frontend delivery. My daily work revolves around semantic HTML5 structure, modern CSS layout systems (Grid and Flexbox), component modularity, dark/light theme implementations, and strict accessibility standards.
             </p>
             <p>
               Each assignment emphasizes real-world engineering rigor: clean Git commit history, responsive cross-device validation from mobile to wide displays, and high-performance execution.

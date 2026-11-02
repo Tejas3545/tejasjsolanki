@@ -49,12 +49,12 @@ export const highlights = [
 export const experience = {
   work: [
     {
-      role: "Web Development Intern",
+      role: "Full Stack Web Developer Intern",
       organization: "WeIntern Pvt Ltd",
       logo: "/img/weintern.png",
       location: "Remote / India",
-      period: "Oct 2024 — Present",
-      url: "https://github.com/Tejas3545",
+      period: "Oct 2026 — Present",
+      url: "https://we-intern.in/",
       description: [
         "Developing semantic, responsive, high-performance web applications using modern frontend architectures and the Next.js App Router.",
         "Implementing component-driven design systems with fluid CSS Grid & Flexbox layouts adhering strictly to modern UX and accessibility guidelines.",
@@ -64,18 +64,18 @@ export const experience = {
       skills: ["Next.js", "React", "JavaScript", "HTML5 & CSS3", "Git & GitHub"],
     },
     {
-      role: "Data Science Intern",
-      organization: "Zidio Development",
-      logo: "/img/zidio.png",
-      location: "Remote / India",
-      period: "Jun 2024 — Sep 2024",
-      url: "https://github.com/Tejas3545/churn-prediction-sales-analysis",
+      role: "Cybersecurity Intern",
+      organization: "Persevex",
+      logo: "/img/persevex.png",
+      location: "Bengaluru, Karnataka (Remote)",
+      period: "Nov 2025 — Present",
+      url: "https://persevex.com",
       description: [
-        "Engineered customer churn prediction models using Logistic Regression and Random Forest classifiers with scikit-learn, optimizing classification thresholds.",
-        "Conducted exploratory sales trend analysis and built automated data visualization pipelines with automated report generation.",
-        "Developed NLP classification utilities for email spam detection and rule-based conversational modules.",
+        "Conduct vulnerability assessments and penetration testing on web applications and network infrastructure using Burp Suite, Nmap, and Metasploit to identify and remediate security gaps.",
+        "Built SCANFURY, a real-time URL security analysis tool identifying phishing and malicious links; deployed on Vercel.",
+        "Analyze security logs and threat intelligence, documenting findings into actionable remediation reports for stakeholders.",
       ],
-      skills: ["Python", "scikit-learn", "Pandas", "Matplotlib", "Data Analysis"],
+      skills: ["Cybersecurity", "Penetration Testing", "Burp Suite", "Nmap", "Metasploit", "Vulnerability Assessment"],
     },
   ],
   education: [

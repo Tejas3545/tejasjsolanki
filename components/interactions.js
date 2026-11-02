@@ -810,24 +810,75 @@ export function DirectContactSection({ standalone = false }) {
 }
 
 // -----------------------------------------------------------------------------
-// Thought & Live Visitor Counter (Point 5 & 12 matching Purv Kabaria's aside)
+// Thought & Live Visitor Counter (Real, non-fabricated global visitor counter)
 // -----------------------------------------------------------------------------
 export function ThoughtAndVisitorCounter() {
-  const [visitorCount, setVisitorCount] = useState(1420);
+  const [visitorCount, setVisitorCount] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    try {
-      const stored = localStorage.getItem("tjs_portfolio_visits");
-      let count = stored ? parseInt(stored, 10) : 1420;
-      if (isNaN(count)) count = 1420;
-      count += 1;
-      localStorage.setItem("tjs_portfolio_visits", count.toString());
-      setVisitorCount(count);
-    } catch {
-      setVisitorCount(1421);
-    }
+
+    const initCounter = async () => {
+      // Check if this visitor has already been counted during this browser session
+      const hasVisitedThisSession = typeof window !== "undefined" && sessionStorage.getItem("tjs_visited_v2");
+      const shouldIncrement = !hasVisitedThisSession;
+
+      // Check cached real count first
+      const cached = localStorage.getItem("tjs_real_visitor_count");
+      if (cached && !isNaN(parseInt(cached, 10))) {
+        setVisitorCount(parseInt(cached, 10));
+      }
+
+      let fetchedCount = null;
+
+      // 1. Try internal Next.js API route first
+      try {
+        const res = await fetch(`/api/visitors${shouldIncrement ? "?inc=1" : ""}`, {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (typeof data.count === "number") {
+            fetchedCount = data.count;
+          }
+        }
+      } catch {
+        // Proceed to direct fallback
+      }
+
+      // 2. If API route didn't return count, try direct CounterAPI call from client
+      if (fetchedCount === null) {
+        try {
+          const directUrl = shouldIncrement
+            ? "https://api.counterapi.dev/v1/tejasjsolanki_portfolio/visitors/up"
+            : "https://api.counterapi.dev/v1/tejasjsolanki_portfolio/visitors";
+          const res = await fetch(directUrl, { cache: "no-store" });
+          if (res.ok) {
+            const data = await res.json();
+            const num = typeof data.count === "number" ? data.count : parseInt(data.count, 10);
+            if (!isNaN(num)) fetchedCount = num;
+          }
+        } catch {
+          // Offline / local development
+        }
+      }
+
+      if (fetchedCount !== null) {
+        setVisitorCount(fetchedCount);
+        localStorage.setItem("tjs_real_visitor_count", fetchedCount.toString());
+        sessionStorage.setItem("tjs_visited_v2", "true");
+      } else {
+        // Local offline fallback: track authentic local count starting from 1
+        const localCount = cached ? parseInt(cached, 10) : 0;
+        const newCount = shouldIncrement ? localCount + 1 : Math.max(localCount, 1);
+        setVisitorCount(newCount);
+        localStorage.setItem("tjs_real_visitor_count", newCount.toString());
+        sessionStorage.setItem("tjs_visited_v2", "true");
+      }
+    };
+
+    initCounter();
   }, []);
 
   return (
@@ -846,7 +897,7 @@ export function ThoughtAndVisitorCounter() {
         <span className="visitor-dot pulse-dot" aria-hidden="true" />
         <span>
           <strong className="visitor-count">
-            {mounted ? visitorCount.toLocaleString() : "1,421"}
+            {mounted && visitorCount !== null ? visitorCount.toLocaleString() : "1"}
           </strong>{" "}
           visitors
         </span>
